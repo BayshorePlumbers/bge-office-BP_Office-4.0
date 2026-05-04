@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- CSP: self-hosted only -->
+  <meta http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+        style-src  'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+        img-src    'self' data:;
+        connect-src 'self' http://localhost:8080;
+      ">
+  <title>BAYSHORE PLUMBERS - MATERIAL LIST</title>
+  <link rel="stylesheet" href="matlook.css" />
+  <script src="global.js"></script>
+</head>
+<body>
+  <header class="header-container">
+    <div class="navbar">
+      <div class="nav-logo border cart-logo"><div class="logo"></div></div>
+      <div class="nav-search">
+        <select class="search-select" id="category-select">
+          <option value="ALL">ALL</option>
+        </select>
+        <input placeholder="Search Bayshore Plumbers Material List" class="search-input" id="search-input" />
+        <div class="search-icon">
+          <!-- If you need the magnifying glass, include your own local icon CSS; CDN is blocked by CSP -->
+          <span onclick="searchMaterials()" style="color:#fff;cursor:pointer;font-weight:700;">Search</span>
+        </div>
+      </div>
+      <div class="cart-icon" onclick="goToCart()">
+        <span class="cart-emoji" aria-hidden="true">🛒</span>
+        <span id="cart-counter" class="cart-counter">0</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Top Pagination -->
+  <div class="pagination pagination-container" id="top-pagination-container"></div>
+
+  <!-- Material container -->
+  <div class="container" id="material-container"></div>
+
+  <!-- Bottom Pagination -->
+  <div class="pagination pagination-container" id="bottom-pagination-container"></div>
+
+  <script>
+  // --- Guard: warn if opened as file:// ---
+  (function ensureHttp() {
+    if (location.protocol === 'file:') {
+      console.error(
+        'This page is opened via file://. Images will be blocked by the browser. ' +
+        'Serve the folder via http://localhost (e.g., python3 -m http.server 8000) ' +
+        'and open http://localhost:8000/matlist.html'
+      );
+    }
+  })();
+
+  // --- Helpers ---
+  function debounce(fn, delay) {
+    let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn.apply(null, args), delay); };
+  }
+  function toHttpPath(path) { return encodeURI(String(path).replace(/^\.?\//, '')); }
+
+  // Robust material image resolver (thumbs -> full -> raw -> placeholder)
+  function resolveMaterialImage(imgEl, item) {
+    const raw = (item.ImageURL || item.image_file || item.image || '').trim();
+    const id  = (item.id || item['Part Number'] || '').trim();
+
+    const rawBase = raw.split('/').pop();
+    const baseNoExt = (rawBase || id || '').replace(/\.(png|jpe?g|webp)$/i, '');
+    if (!baseNoExt) { imgEl.src = toHttpPath('Plumbing Images/thumbs/placeholder.png'); return; }
+
+    const candidates = [
+      // thumbnails first
+      `Plumbing Images/thumbs/${baseNoExt}.jpg`,
+      `Plumbing Images/thumbs/${baseNoExt}.png`,
+      `Plumbing Images/thumbs/${baseNoExt}.jpeg`,
+      `Plumbing Images/thumbs/${baseNoExt}.webp`,
+      // then full-size
+      `Plumbing Images/${baseNoExt}.jpg`,
+      `Plumbing Images/${baseNoExt}.png`,
+      `Plumbing Images/${baseNoExt}.jpeg`,
+      `Plumbing Images/${baseNoExt}.webp`
+    ];
+    if (raw) candidates.push(raw); // global.js-provided path
+    candidates.push('Plumbing Images/thumbs/placeholder.png'); // final fallback
+
+    let i = 0;
+    imgEl.onerror = () => { if (i < candidates.length) imgEl.src = toHttpPath(candidates[i++]); };
+    imgEl.src = toHttpPath(candidates[i++]);
+  }
+
+  // Normalization for search
+  function normalizeText(text) {
+    text = String(text || '').toLowerCase();
+    text = text.replace(/(\d+)\s*(?:-|and\s+)?1\/2(?:\s*(?:inches|inch|in))?/g, (_, p1) => (parseFloat(p1) + 0.5) + '');
+    text = text.replace(/(\d+)\s*(?:-|and\s+)?a\s+half(?:\s*(?:inches|inch|in))?/g, (_, p1) => (parseFloat(p1) + 0.5) + '');
+    text = text.replace(/["']/g, "");
+    text = text.replace(/[^a-z0-9.\s]/g, " ");
+    text = text.replace(/\s+/g, " ");
+    return text.trim();
+  }
+
+  function generateUID(item) {
+    return normalizeText(`${item["Ln#"]}-${item["Part Number"]}-${item.Description}-${item.Category || "material"}`);
+  }
+
+  // Map global materials to the shape this page expects
+  const materialsRaw = (typeof globalData !== 'undefined' && Array.isArray(globalData.materials))
+    ? globalData.materials : [];
+
+  const materialsData = materialsRaw.map((m, idx) => ({
+    "Ln#": idx + 1,
+    "Part Number": m.id || "",
+    "Description": m.description || "",
+    "price": Number(m.price) || 0,
+    "quantity": 1,
+    "Unit": m.unit || "EA",
+    "extendedprice": Number(m.price) || 0,
+    "ImageURL": (m.image_file || "").split("/").pop(), // filename only
+    "Category": (m.category || "")
+  }));
+
+  // --- State ---
+  const materialsPerPage = 50;
+  let currentPage = 1;
+  let cart = [];
+
+  // Single initializer (no duplicate onload)
+  function initMaterialList() {
+    loadCartFromStorage();
+    updateCartItemCount();
+    populateMaterialCategories();
+    displayMaterials(currentPage);
+    document.getElementById('search-input')
+            .addEventListener('input', debounce(searchMaterials, 300));
+    document.getElementById('category-select')
+            .addEventListener('change', searchMaterials);
+  }
+
+  // Run once DOM is ready (global.js may have run earlier)
+  document.addEventListener('DOMContentLoaded', initMaterialList);
+
+  // --- UI renderers ---
+  function populateMaterialCategories() {
+    const select = document.getElementById('category-select');
+    const cats = Array.from(new Set(
+      materialsData.map(m => (m.Category || '').trim()).filter(Boolean)
+    )).sort();
+
+    select.innerHTML = `<option value="ALL">ALL</option>` +
+      cats.map(c => `<option value="${c}">${c}</option>`).join('');
+  }
+
+  function displayMaterials(page, list = materialsData) {
+    const container = document.getElementById('material-container');
+    const startIndex = (page - 1) * materialsPerPage;
+    const endIndex   = Math.min(startIndex + materialsPerPage, list.length);
+    const itemsToShow = list.slice(startIndex, endIndex);
+
+    container.innerHTML = '';
+
+    itemsToShow.forEach(item => {
+      const card = document.createElement('div');
+      card.classList.add('material');
+
+      const img = document.createElement('img');
+      img.alt = item.Description;
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.fetchPriority = 'low';
+      img.width = 480; img.height = 270;
+
+      // Single source of truth for image src (no double-assign)
+      resolveMaterialImage(img, item);
+      card.appendChild(img);
+
+      const details = document.createElement('div');
+      details.classList.add('details');
+      details.innerHTML = `
+        <p><strong>Description: ${item.Description}</strong></p>
+        <p>Price: $${item.price.toFixed(2)}</p>
+        <p>Quantity: ${item.quantity} ${item.Unit}</p>
+      `;
+      card.appendChild(details);
+
+      const btn = document.createElement('button');
+      btn.classList.add('add-to-cart');
+      btn.textContent = 'Add to Cart';
+      btn.addEventListener('click', () => addToCart(item));
+      card.appendChild(btn);
+
+      container.appendChild(card);
+    });
+
+    displayPagination(list.length);
+  }
+
+  function displayPagination(totalItems) {
+    const totalPages = Math.ceil(totalItems / materialsPerPage);
+    const containers = document.querySelectorAll('.pagination-container');
+
+    containers.forEach(container => {
+      container.innerHTML = '';
+      if (totalPages > 1) {
+        const prev = document.createElement('button');
+        prev.textContent = 'Previous';
+        prev.disabled = currentPage === 1;
+        prev.addEventListener('click', () => {
+          if (currentPage > 1) { currentPage--; displayMaterials(currentPage); }
+        });
+        container.appendChild(prev);
+      }
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        if (i === currentPage) btn.classList.add('active');
+        btn.addEventListener('click', () => { currentPage = i; displayMaterials(currentPage); });
+        container.appendChild(btn);
+      }
+      if (totalPages > 1) {
+        const next = document.createElement('button');
+        next.textContent = 'Next';
+        next.disabled = currentPage === totalPages;
+        next.addEventListener('click', () => {
+          if (currentPage < totalPages) { currentPage++; displayMaterials(currentPage); }
+        });
+        container.appendChild(next);
+      }
+    });
+  }
+
+  // --- Search ---
+  function searchMaterials() {
+    const rawQ  = document.getElementById('search-input').value || '';
+    const q     = normalizeText(rawQ);
+    const toks  = q.split(/\s+/).filter(Boolean);
+    const catVal = (document.getElementById('category-select').value || '').trim().toLowerCase();
+
+    const filtered = materialsData.filter(item => {
+      const hay = normalizeText([
+        item.Description,
+        item['Part Number'],
+        item.Unit,
+        item.Category
+      ].filter(Boolean).join(' '));
+
+      const matchTokens = toks.every(t => hay.includes(t));
+      const cat = (item.Category || '').toLowerCase();
+      const matchCat = (catVal === 'all') || cat.includes(catVal);
+      return matchTokens && matchCat;
+    });
+
+    currentPage = 1;
+    displayMaterials(currentPage, filtered);
+  }
+
+  // --- Cart ---
+  function addToCart(item) {
+    const uid = generateUID(item);
+    const isCountable = item.Unit && item.Unit.toUpperCase() === 'EA';
+    const quantityToAdd = isCountable ? item.quantity : 1;
+
+    const existing = cart.find(ci => ci.uid === uid);
+    if (existing) existing.quantity += quantityToAdd;
+    else cart.push({ ...item, uid, quantity: quantityToAdd, type: 'material' });
+
+    updateCartItemCount();
+    saveCartToStorage();
+  }
+
+  function updateCartItemCount() {
+    const total = cart.reduce((sum, it) => {
+      if (it.Unit && it.Unit.toUpperCase() !== 'EA') return sum + 1;
+      return sum + (Number(it.quantity) || 0);
+    }, 0);
+    document.getElementById('cart-counter').textContent = total;
+  }
+
+  function loadCartFromStorage() {
+    try {
+      const stored = localStorage.getItem('cart');
+      if (stored) { cart = JSON.parse(stored) || []; }
+    } catch(e) { cart = []; }
+    updateCartItemCount();
+  }
+
+  function saveCartToStorage() {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }
+
+  function goToCart() { window.location.href = 'cart.html'; }
+  </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+/* Reset and base styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #1e3a5f;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+/* Headings */
+h1 {
+    color: #9b2e2e;
+    font-size: 2.5rem;
+    margin-top: 40px;
+    font-weight: bold;
+}
+
+h2 {
+    color: #1e3a5f;
+    font-size: 1.8rem;
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+/* Logo */
+.logo-container {
+    margin: 20px auto;
+}
+
+.logo {
+    width: 120px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Instructions */
+p {
+    font-size: 1.1rem;
+    color: #5e5e5e;
+    margin-bottom: 20px;
+}
+
+/* File Container */
+.file-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 20px;
+}
+
+.file-item {
+    background-color: #ffffff;
+    border: 2px solid #1e3a5f;
+    border-radius: 12px;
+    width: 260px;
+    padding: 20px;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.file-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.file-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.file-item p {
+    font-size: 1.05rem;
+    font-weight: bold;
+    color: #9b2e2e;
+    margin-top: 15px;
+}
+
+/* Links */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .file-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .file-item {
+        width: 80%;
+    }
+}

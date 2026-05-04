@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self';
+                 img-src 'self' data: https:;
+                 style-src 'self';
+                 script-src 'self';
+                 connect-src 'self' https:;
+                 base-uri 'self';
+                 form-action 'self';" />
+
+  <title>Payroll Calculators | Bayshore Plumbers</title>
+  <meta name="theme-color" content="#011B2E" />
+
+  <!-- Shared UI + launcher layout + print -->
+  <link rel="stylesheet" href="../assets/css/bp-core.css" type="text/css" />
+  <link rel="stylesheet" href="../assets/css/bp-launcher-2col.css" type="text/css" />
+  <link rel="stylesheet" href="../assets/css/bp-print.css" media="print" type="text/css" />
+
+  <script src="../assets/js/bp-ui.js" defer></script>
+</head>
+
+<body class="bp-ready">
+  <main class="bp-page">
+    <header class="bp-header">
+      <h1>HELLO</h1>
+      <h2>PAYROLL CALCULATORS</h2>
+
+      <div class="logo-container">
+        <img src="../assets/img/BP.png" alt="BP" class="logo" />
+      </div>
+
+      <p>Please select the PAYROLL CALCULATOR that you would like to use today, from the options below:</p>
+    </header>
+
+    <!-- 1) Commission Calculators -->
+    <h3 class="bp-section-title">1. Commission Calculators</h3>
+    <div class="file-container">
+      <a class="bp-card" data-id="com-general" data-cat="payroll" href="comSAMA.html" data-keywords="commission general comSAMA">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="../Thumbnails/comcal.jpg" alt="" class="bp-icon__img"
+               data-bp-fallback="../assets/img/thumbnails/BP.png"
+               loading="eager" fetchpriority="high" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Commission</div>
+          <div class="bp-card__title">General Commission</div>
+          <div class="bp-card__meta">Standard technician &amp; office</div>
+        </div>
+      </a>
+
+      <a class="bp-card" data-id="com-david" data-cat="payroll" href="com25SAMA.html" data-keywords="commission david comDJ">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="../Thumbnails/comcal.jpg" alt="" class="bp-icon__img"
+               data-bp-fallback="../assets/img/thumbnails/BP.png"
+               loading="eager" fetchpriority="high" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Commission</div>
+          <div class="bp-card__title">Commission: Rafael &amp; Jose Sanabria</div>
+          <div class="bp-card__meta">25% commission rules</div>
+        </div>
+      </a>
+    </div>
+
+        <!-- 2) Hourly Calculators -->
+    <h3 class="bp-section-title">2. Hourly Calculators</h3>
+    <div class="file-container">
+      <a class="bp-card" data-id="hourly" data-cat="payroll" href="htechSAMA.html" data-keywords="hourly htechSAMA payroll">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="../Thumbnails/kick.jpg" alt="" class="bp-icon__img"
+               data-bp-fallback="../assets/img/thumbnails/BP.png"
+               loading="eager" fetchpriority="high" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Hourly</div>
+          <div class="bp-card__title">Hourly Calculator</div>
+          <div class="bp-card__meta">Hourly tech commission</div>
+        </div>
+      </a>
+
+      <a class="bp-card" data-id="hourly-egsama" data-cat="payroll" href="htechEGSAMA.html" data-keywords="hourly spanish edvin htechEGSAMA kicker bpp percent">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="../Thumbnails/kick.jpg" alt="" class="bp-icon__img"
+               data-bp-fallback="../assets/img/thumbnails/BP.png"
+               loading="eager" fetchpriority="high" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Hourly</div>
+          <div class="bp-card__title">Hourly Calculator — Edvin Garcia</div>
+          <div class="bp-card__meta">Spanish UI • English Print</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- 3) Operations Job Report -->
+    <h3 class="bp-section-title">3. Operations Job Report</h3>
+    <div class="file-container">
+      <a class="bp-card" data-id="ops" data-cat="payroll" href="payrollOPSSAMA.html" data-keywords="operations job report payrollOPS">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="../Thumbnails/jobrepo.jpg" alt="" class="bp-icon__img"
+               data-bp-fallback="../assets/img/thumbnails/BP.png"
+               loading="eager" fetchpriority="high" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Operations</div>
+          <div class="bp-card__title">Operations Job Report</div>
+          <div class="bp-card__meta">OPS reporting</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- 4) Sales Calculators -->
+    <h3 class="bp-section-title">4. Sales Calculators</h3>
+    <div class="file-container">    
+      <a class="bp-card" data-id="sales-edso" data-cat="payroll" href="payrollEDSOSAMA.html" data-keywords="sales eddie maigua brian solis payrollEDSO">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="../Thumbnails/salemain.jpg" alt="" class="bp-icon__img"
+               data-bp-fallback="../assets/img/thumbnails/BP.png"
+               loading="eager" fetchpriority="high" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Sales</div>
+          <div class="bp-card__title">Sales: Brian Solis</div>
+          <div class="bp-card__meta">Brian Solis</div>
+        </div>
+      </a>
+
+      <a class="bp-card" data-id="sales-omra" data-cat="payroll" href="payrollOMRASAMA.html" data-keywords="sales omar lopez rafael menendez payrollOMRA">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="../Thumbnails/salemain.jpg" alt="" class="bp-icon__img"
+               data-bp-fallback="../assets/img/thumbnails/BP.png"
+               loading="eager" fetchpriority="high" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Sales</div>
+          <div class="bp-card__title">Sales — Jose Sanabria &amp; Rafael</div>
+          <div class="bp-card__meta">Jose Sanabria &amp; Rafael Menendez</div>
+        </div>
+      </a>
+
+      <a class="bp-card" data-id="sales-hourly" data-cat="payroll" href="payrollHOURLYSAMA.html" data-keywords="sales hourly technicians payrollHourly">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="../Thumbnails/salemain.jpg" alt="" class="bp-icon__img"
+               data-bp-fallback="../assets/img/thumbnails/BP.png"
+               loading="eager" fetchpriority="high" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Sales</div>
+          <div class="bp-card__title">Sales — Hourly Technicians</div>
+          <div class="bp-card__meta">Hourly Tech's Sales Calculator</div>
+        </div>
+      </a>
+    </div>
+  </main>
+</body>
+</html>

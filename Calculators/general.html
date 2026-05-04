@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self';
+                 img-src 'self' data: https:;
+                 style-src 'self';
+                 script-src 'self';
+                 connect-src 'self' https:;
+                 base-uri 'self';
+                 form-action 'self';" />
+
+  <title>General Bidding Calculator - Bayshore Plumbers</title>
+  <meta name="theme-color" content="#011B2E" />
+
+  <!-- SAM 3.0 shared styles (screen + print) -->
+  <link rel="stylesheet" href="../assets/css/bp-core.css" type="text/css" />
+  <link rel="stylesheet" href="../assets/css/bp-calculator.css" type="text/css" />
+
+  <link rel="stylesheet" href="../assets/css/bp-print.css" media="print" />
+  <link rel="stylesheet" href="../assets/css/bp-calculator-print.css" media="print" />
+
+  <!-- Shared UI helpers (safe; no inline styles) -->
+  <script src="../assets/js/bp-ui.js" defer></script>
+
+  <!-- Calculator logic -->
+  <script src="general.js" defer></script>
+</head>
+
+<body class="bp-ready">
+  <header>
+    <div class="logo-container">
+      <img src="../assets/img/BP.png" alt="Bayshore Plumbers Logo" class="logo" />
+    </div>
+    <h1>General Bidding Calculator</h1>
+    <hr class="header-separator" />
+  </header>
+
+  <main class="container">
+    <form id="biddingForm">
+      <!-- Section 1: Basic Options (match upper.html pattern) -->
+      <section class="form-section">
+        <div class="form-group">
+          <label for="pdu">Project Duration Unit:</label>
+          <select id="pdu" name="pdu">
+            <option value="days">Days</option>
+            <option value="hours">Hours</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="epd">Estimated Project Duration:</label>
+          <input type="number" id="epd" name="epd" placeholder="Enter Estimated Project Duration" min="0" step="0.1" />
+        </div>
+
+        <div class="form-group">
+          <label for="am">Number of Labors Required:</label>
+          <input type="number" id="am" name="am" placeholder="Enter Number of Labors Required" min="0" />
+        </div>
+
+        <div class="form-group">
+          <label for="discount">Discounts:</label>
+          <select id="discount" name="discount">
+            <option value="no discount">No Discount</option>
+            <option value="5%">5 Percent</option>
+            <option value="10%">10 Percent</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="financing">Financing Option:</label>
+          <select id="financing" name="financing">
+            <option value="none">None</option>
+            <option value="2832">Plan 2832</option>
+            <option value="2611">Plan 2611</option>
+            <option value="9998">Plan 9998</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Section 2: Additional Options (match upper.html pattern) -->
+      <section class="form-section">
+        <div class="form-group">
+          <label for="material">Material Expenses:</label>
+          <input type="number" id="material" name="material" placeholder="Enter Estimated Material Expenses" min="0" />
+        </div>
+
+        <div class="form-group">
+          <label for="rentals">Rental Expenses:</label>
+          <input type="number" id="rentals" name="rentals" placeholder="Enter Estimated Rental Expenses" min="0" />
+        </div>
+
+        <div class="form-group">
+          <label>Machinery/Equipment:</label>
+          <div id="machinery" class="bp-checklist">
+            <label><input type="checkbox" class="machine" data-price="50" value="Excavator Big" /> Excavator Big ($50 per day)</label>
+            <label><input type="checkbox" class="machine" data-price="40" value="Excavator Small" /> Excavator Small ($40 per day)</label>
+            <label><input type="checkbox" class="machine" data-price="40" value="Bob Cat/Skid Steer" /> Bob Cat/Skid Steer ($40 per day)</label>
+            <label><input type="checkbox" class="machine" data-price="40" value="Hydro Truck" /> Hydro Truck ($40 per day)</label>
+            <label><input type="checkbox" class="machine" data-price="30" value="Dump Truck" /> Dump Truck ($30 per day)</label>
+            <label><input type="checkbox" class="machine" data-price="10" value="Trench Plates" /> Trench Plates ($10 per day)</label>
+            <label><input type="checkbox" class="machine" data-price="20" value="Vibrating Roller" /> Vibrating Roller ($20 per day)</label>
+            <label><input type="checkbox" class="machine" data-price="50" value="Trenchless Machine" /> Trenchless Machine ($50 per day)</label>
+            <label><input type="checkbox" class="machine" data-price="10" value="Shoring" /> Shoring ($10 per day)</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Permits:</label>
+          <div id="permits" class="bp-checklist">
+            <label><input type="checkbox" name="permits" value="building" /> Building Permit</label>
+            <label><input type="checkbox" name="permits" value="sewer" /> Sewer Permit</label>
+            <label><input type="checkbox" name="permits" value="encroachment" /> Encroachment Permit</label>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Technical Options (match upper.html pattern) -->
+      <section class="form-section">
+        <div class="form-group checkbox-group">
+          <label for="afterHours">After Hours:</label>
+          <input type="checkbox" id="afterHours" name="afterHours" />
+        </div>
+      </section>
+
+      <!-- Section 4: Output (match upper.html exactly) -->
+      <section class="form-section output-section">
+        <div class="output-group">
+          <label for="finalPrice">Final Bidding Price:</label>
+          <span id="finalPrice">$0.00</span>
+        </div>
+
+        <div id="breakdown" class="breakdown"></div>
+      </section>
+
+      <!-- Section 5: Buttons (match upper.html exactly) -->
+      <section class="form-section buttons-section">
+        <button type="button" id="calculateBtn">Calculate</button>
+        <button type="button" id="printBtn">Print</button>
+      </section>
+    </form>
+  </main>
+</body>
+</html>

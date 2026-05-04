@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+        style-src  'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+        img-src    'self' data:;
+        connect-src 'self' http://localhost:8080;
+      ">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+  <title>BAYSHORE PLUMBERS - EQUIPMENT LIST</title>
+  <link rel="stylesheet" href="matlook.css">
+  <script src="global.js"></script>
+</head>
+<body>
+  <header class="header-container">
+    <div class="navbar">
+      <div class="nav-logo border cart-logo">
+        <div class="logo"></div>
+      </div>
+      <div class="nav-search">
+        <select class="search-select" id="category-select">
+          <option value="ALL">ALL</option>
+          <!-- Add more categories if needed -->
+        </select>
+        <input placeholder="Search Bayshore Plumbers Equipment List" class="search-input" id="search-input">
+        <div class="search-icon">
+          <i class="fa-solid fa-magnifying-glass" onclick="searchEquipments()"></i>
+        </div>
+      </div>
+      <div class="cart-icon" onclick="goToCart()">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cart-counter" class="cart-counter">0</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Top Pagination -->
+  <div class="pagination pagination-container" id="top-pagination-container"></div>
+
+  <!-- Equipment container -->
+  <div class="container" id="equipment-container"></div>
+
+  <!-- Bottom Pagination -->
+  <div class="pagination pagination-container" id="bottom-pagination-container"></div>
+
+  <script>
+    function normalizeText(text) {
+      text = text.toLowerCase();
+      text = text.replace(/(\d+)\s*(?:-|and\s+)?1\/2(?:\s*(?:inches|inch|in))?/g, (match, p1) => (parseFloat(p1) + 0.5).toString());
+      text = text.replace(/(\d+)\s*(?:-|and\s+)?a\s+half(?:\s*(?:inches|inch|in))?/g, (match, p1) => (parseFloat(p1) + 0.5).toString());
+      text = text.replace(/["']/g, "");
+      text = text.replace(/[^a-z0-9.\s]/g, " ");
+      text = text.replace(/\s+/g, " ");
+      return text.trim();
+    }
+
+    function generateUID(item) {
+      return normalizeText(`${item["Ln#"]}-${item["Part Number"] || ''}-${item.Description}-equipment`);
+    }
+
+    const equipmentsData = (globalData?.equipment || []).map((e, idx) => ({
+      "Ln#": e["Ln#"] ?? (idx + 1),
+      "Description": e.Description ?? e.description ?? "",
+      "pricePerDay": Number(e.pricePerDay ?? e.price ?? 0),
+      "pricePerHour": Number(e.pricePerHour ?? 0),
+      "quantity": Number(e.quantity ?? 1),
+      "Unit": e.Unit ?? e.unit ?? "Machine",
+      "ImageURL": e.ImageURL ?? e.image_file ?? ""
+    }));
+
+    const equipmentsPerPage = 25;
+    let currentPage = 1;
+    let cart = [];
+
+    function displayEquipments(page, equipments = equipmentsData) {
+      const container = document.getElementById('equipment-container');
+      const start = (page - 1) * equipmentsPerPage;
+      const end = Math.min(start + equipmentsPerPage, equipments.length);
+      const items = equipments.slice(start, end);
+      container.innerHTML = '';
+      items.forEach(equip => {
+        const div = document.createElement('div');
+        div.classList.add('equipment');
+        const img = document.createElement('img');
+        img.src = equip.ImageURL;
+        img.alt = equip.Description;
+        img.loading = "lazy";
+        img.decoding = "async";
+        img.fetchPriority = "low";
+        img.width = 480;
+        img.height = 270;
+        div.appendChild(img);
+        const details = document.createElement('div');
+        details.classList.add('details');
+        details.innerHTML = `
+          <p><strong>Description: ${equip.Description}</strong></p>
+          <p>Price Per Day: $${equip.pricePerDay.toFixed(2)}</p>
+          <p>Price Per Hour: $${equip.pricePerHour.toFixed(2)}</p>
+          <p>Quantity: ${equip.quantity} ${equip.Unit}</p>
+          <div>
+            <input type="radio" name="rentalType${equip["Ln#"]}" value="perDay" checked> Per Day
+            <input type="radio" name="rentalType${equip["Ln#"]}" value="perHour"> Per Hour
+          </div>
+        `;
+        div.appendChild(details);
+        const btn = document.createElement('button');
+        btn.classList.add('add-to-cart');
+        btn.textContent = 'Add to Cart';
+        btn.addEventListener('click', () => {
+          const rentalType = document.querySelector(`input[name="rentalType${equip["Ln#"]}"]:checked`).value;
+          addToCart(equip, rentalType);
+        });
+        div.appendChild(btn);
+        container.appendChild(div);
+      });
+      displayPagination(equipments.length);
+    }
+
+    function populateEquipmentUnits() {
+      const select = document.getElementById('category-select');
+      const units = Array.from(new Set(
+        equipmentsData.map(e => (e.Unit || '').trim()).filter(Boolean)
+      )).sort();
+
+      select.innerHTML = `<option value="ALL">ALL</option>` +
+        units.map(u => `<option value="${u}">${u}</option>`).join('');
+    }
+
+    window.onload = function () {
+      loadCartFromStorage();
+      updateCartItemCount();
+      displayEquipments(currentPage);
+      populateEquipmentUnits(); // ← add this line
+      document.getElementById('search-input').addEventListener('input', debounce(searchEquipments, 300));
+      document.getElementById('category-select').addEventListener('change', searchEquipments);
+    };
+
+    function displayPagination(total) {
+      const totalPages = Math.ceil(total / equipmentsPerPage);
+      const containers = document.querySelectorAll('.pagination-container');
+      containers.forEach(container => {
+        container.innerHTML = '';
+        const prev = document.createElement('button');
+        prev.textContent = 'Previous';
+        prev.disabled = currentPage === 1;
+        prev.addEventListener('click', () => { if (currentPage > 1) { currentPage--; displayEquipments(currentPage); } });
+        container.appendChild(prev);
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement('button');
+          btn.textContent = i;
+          btn.classList.add('pagination-button');
+          if (i === currentPage) btn.classList.add('active');
+          btn.addEventListener('click', () => { currentPage = i; displayEquipments(currentPage); });
+          container.appendChild(btn);
+        }
+        const next = document.createElement('button');
+        next.textContent = 'Next';
+        next.disabled = currentPage === totalPages;
+        next.addEventListener('click', () => { if (currentPage < totalPages) { currentPage++; displayEquipments(currentPage); } });
+        container.appendChild(next);
+      });
+    }
+
+    function searchEquipments() {
+      const rawQ = document.getElementById('search-input').value || '';
+      const q = normalizeText(rawQ);
+      const tokens = q.split(/\s+/).filter(Boolean);
+
+      const catVal = (document.getElementById('category-select').value || '').trim().toLowerCase();
+
+      const filtered = equipmentsData.filter(equip => {
+        const hay = normalizeText([
+          equip.Description,
+          equip['Part Number'],
+          equip.Unit
+        ].filter(Boolean).join(' '));
+
+        const matchTokens = tokens.every(t => hay.includes(t));
+        const unit = (equip.Unit || '').toLowerCase();
+        const matchCat = (catVal === 'all') || unit.includes(catVal);
+
+        return matchTokens && matchCat;
+      });
+
+      currentPage = 1;
+      displayEquipments(currentPage, filtered);
+    }
+
+    function addToCart(item, rentalType) {
+      const price = rentalType === 'perDay' ? item.pricePerDay : item.pricePerHour;
+      const uid = generateUID(item);
+      const existing = cart.find(cartItem => cartItem.uid === uid && cartItem.rentalType === rentalType);
+      if (existing) {
+        existing.quantity += item.quantity; // For equipment, quantity is usually 1
+      } else {
+        cart.push({ ...item, uid, quantity: item.quantity, price, rentalType });
+      }
+      updateCartItemCount();
+      saveCartToStorage();
+    }
+
+    function updateCartItemCount() {
+      const total = cart.reduce((sum, item) => {
+        // For non-"EA" items (like equipment), count each as 1 distinct item.
+        if (item.Unit && item.Unit.toUpperCase() !== "EA") {
+          return sum + 1;
+        } else {
+          return sum + item.quantity;
+        }
+      }, 0);
+      document.getElementById('cart-counter').textContent = total;
+    }
+
+    function loadCartFromStorage() {
+      try {
+        const stored = localStorage.getItem('cart');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) cart = parsed;
+        }
+      } catch (_) {}
+      updateCartItemCount();
+    }
+
+    function saveCartToStorage() {
+      try { localStorage.setItem('cart', JSON.stringify(cart)); } catch (_) {}
+    }
+
+    function debounce(func, delay) {
+      let timeout;
+      return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), delay);
+      };
+    }
+
+    function goToCart() {
+      window.location.href = "cart.html";
+    }
+  </script>
+</body>
+</html>

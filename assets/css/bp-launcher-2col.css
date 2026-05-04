@@ -1,0 +1,185 @@
+/* =========================================================
+   bp-launcher-2col.css  (SAM 3.0 Launcher Standard)
+   Standard = bidcalindex.html look
+   ========================================================= */
+
+/* Page container */
+.bp-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px 16px 28px;
+}
+
+/* Header centered */
+.bp-header {
+  text-align: center;
+  margin: 0 auto 14px;
+}
+
+.bp-header h1,
+.bp-header h2,
+.bp-header p {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.bp-header p {
+  max-width: 900px;
+}
+
+/* =========================================================
+   Launcher header logo (single source of truth)
+   WHY: bp-core.css has global img.logo rules; we must override
+   only inside launcher headers to keep everything identical.
+   ========================================================= */
+
+.bp-header .logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 12px 0 14px;
+}
+
+/* IMPORTANT: do NOT size via ".logo" globally; scope to launcher header */
+.bp-header .logo-container img,
+.bp-header img.logo,
+.bp-header .bp-logo img {
+  display: block;
+  width: auto;
+  height: 44px;         /* canonical launcher logo height */
+  max-height: 44px;
+  max-width: 220px;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+/* Section titles */
+.bp-section-title {
+  max-width: 1100px;
+  margin: 22px auto 12px;
+  font-size: 15.5px;
+  font-weight: 720;
+  letter-spacing: .2px;
+  color: var(--bp-navy, #011B2E);
+}
+
+/* =========================================================
+   2-column launcher grid
+   Standard: 2 columns on desktop/tablet, 1 column < 620px
+   ========================================================= */
+
+.file-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+
+  max-width: 1100px;
+  margin: 0 auto 18px;
+  padding: 0;
+}
+
+@media (max-width: 620px) {
+  .file-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Cards fill the grid cell (bp-card is defined in bp-core.css) */
+.file-container > .bp-card {
+  width: 100%;
+}
+
+/* =========================================================
+   Media constraints inside cards / legacy file-item blocks
+   WHY: Prevent oversized document thumbnails from blowing up
+   ========================================================= */
+
+/* If the page uses bp-core icon structure (recommended) */
+.bp-card .bp-icon__img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+}
+
+/* If the page is still using legacy ".file-item" blocks (older markup) */
+.file-item img {
+  display: block;
+  width: 100%;
+  max-width: 220px;     /* clamp big book cover images */
+  height: 120px;        /* fixed height keeps rows tidy */
+  object-fit: contain;  /* show full cover without cropping */
+  margin: 0 auto;
+}
+
+/* Safety: never allow any launcher images to overflow */
+.bp-header img,
+.file-item img,
+.bp-card img {
+  max-width: 100%;
+}
+
+/* =========================================================
+   CRITICAL: BP logo must NEVER be cropped inside icon boxes
+   WHY: bp-core uses object-fit:cover for photos; logos need contain
+   NOTE: This standard applies everywhere across launcher pages.
+   ========================================================= */
+
+.file-container .bp-icon__img[src$="BP.png"],
+.file-container .bp-icon__img[src$="/BP.png"],
+.file-container .bp-icon__img[src$="thumbnails/BP.png"],
+.file-container .bp-icon__img[src$="/thumbnails/BP.png"] {
+  object-fit: contain;
+}
+
+/* =========================================================
+   LEGACY TILE -> STANDARD CARD SKIN (SAFE, SCOPED)
+   WHY: wf.html must use .file-item (bp-card is hidden by bp-core),
+        but we still want identical launcher cards everywhere.
+   SAFE: affects only .file-container .file-item > a.
+   ========================================================= */
+
+.file-container .file-item > a {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 14px;
+  align-items: center;
+
+  padding: 14px 14px;
+  border-radius: 16px;
+
+  text-decoration: none;
+  color: inherit;
+
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+
+  min-height: 92px;
+}
+
+.file-container .file-item > a:hover {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.09);
+}
+
+.file-container .file-item > a:focus-visible {
+  outline: 3px solid rgba(0, 95, 222, 0.35);
+  outline-offset: 3px;
+}
+
+/* Normalize legacy tile image to match standard card thumbnail size */
+.file-container .file-item > a > img {
+  width: 92px;
+  height: 64px;
+  object-fit: contain; /* never crop */
+  display: block;
+  margin: 0; /* override legacy centering */
+}
+
+/* Normalize legacy tile title */
+.file-container .file-item > a > p {
+  margin: 0;
+  font-weight: 720;
+  letter-spacing: .1px;
+  line-height: 1.2;
+}

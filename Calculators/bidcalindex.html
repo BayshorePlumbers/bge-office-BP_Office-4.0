@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <!-- SAM 3.0 CSP: no CDN, no unsafe-inline -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self';
+                 img-src 'self' data: https:;
+                 style-src 'self';
+                 script-src 'self';
+                 connect-src 'self' https:;
+                 base-uri 'self';
+                 form-action 'self';" />
+
+  <title>Bidding Calculators | Bayshore Plumbers</title>
+  <meta name="theme-color" content="#011B2E" />
+
+  <!-- Shared UI + launcher layout + print -->
+  <link rel="stylesheet" href="../assets/css/bp-core.css" type="text/css" />
+  <link rel="stylesheet" href="../assets/css/bp-launcher-2col.css" type="text/css" />
+  <link rel="stylesheet" href="../assets/css/bp-print.css" media="print" />
+
+  <script src="../assets/js/bp-ui.js" defer></script>
+</head>
+
+<body class="bp-ready">
+  <main class="bp-page">
+    <header class="bp-header">
+      <h1>HELLO</h1>
+      <h2>BIDDING CALCULATORS</h2>
+
+      <div class="logo-container">
+        <img src="../assets/img/BP.png" alt="BP" class="logo" />
+      </div>
+
+      <p>Please select the Bidding Calculator that you would like to use today, from the options below:</p>
+    </header>
+
+    <div class="file-container" aria-label="Bidding Calculators">
+      <a class="bp-card" data-id="street" data-cat="calculators" href="street.html" data-keywords="street project estimation bidding">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="../Thumbnails/streetcal1.jpg" alt="" class="bp-icon__img"
+               data-bp-fallback="../assets/img/thumbnails/BP.png"
+               loading="eager" fetchpriority="high" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Bidding</div>
+          <div class="bp-card__title">Street Project</div>
+          <div class="bp-card__meta">Estimation calculator</div>
+        </div>
+      </a>
+
+      <a class="bp-card" data-id="upper" data-cat="calculators" href="upper.html" data-keywords="upper lateral estimation bidding">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="../Thumbnails/upperlateral.jpg" alt="" class="bp-icon__img"
+               data-bp-fallback="../assets/img/thumbnails/BP.png"
+               loading="eager" fetchpriority="high" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Bidding</div>
+          <div class="bp-card__title">Upper Lateral</div>
+          <div class="bp-card__meta">Estimation calculator</div>
+        </div>
+      </a>
+
+      <a class="bp-card" data-id="general" data-cat="calculators" href="general.html" data-keywords="general plumbing estimation bidding">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="../Thumbnails/general.jpg" alt="" class="bp-icon__img"
+               data-bp-fallback="../assets/img/thumbnails/BP.png"
+               loading="eager" fetchpriority="high" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Bidding</div>
+          <div class="bp-card__title">General Plumbing</div>
+          <div class="bp-card__meta">Estimation calculator</div>
+        </div>
+      </a>
+
+      <a class="bp-card" data-id="heater" data-cat="calculators" href="heater.html" data-keywords="water heater estimation bidding">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="../Thumbnails/water.jpg" alt="" class="bp-icon__img"
+               data-bp-fallback="../assets/img/thumbnails/BP.png"
+               loading="eager" fetchpriority="high" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Bidding</div>
+          <div class="bp-card__title">Water Heater</div>
+          <div class="bp-card__meta">Estimation calculator</div>
+        </div>
+      </a>
+
+      <a class="bp-card" data-id="liner" data-cat="calculators" href="liner.html" data-keywords="perma liner cip cured in place estimation bidding">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="../Thumbnails/cip.jpg" alt="" class="bp-icon__img"
+               data-bp-fallback="../assets/img/thumbnails/BP.png"
+               loading="eager" fetchpriority="high" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Bidding</div>
+          <div class="bp-card__title">Perma Liner</div>
+          <div class="bp-card__meta">CIP estimation calculator</div>
+        </div>
+      </a>
+    </div>
+  </main>
+</body>
+</html>

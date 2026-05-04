@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy"
+      content="default-src 'self';
+               img-src 'self' data:;
+               style-src 'self';
+               script-src 'self';
+               connect-src 'self'" />
+  <title>Technician Potential Commission Calculator - Bayshore Plumbers</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+  <link rel="stylesheet" href="payrollstyle.css" type="text/css">
+  <link rel="stylesheet" href="payrollprint.css" type="text/css" media="print">
+</head>
+
+<body>
+  <main class="container" role="main">
+    <header class="top-bar no-print">
+      <div class="header-left">
+        <img src="BP.png" alt="Bayshore Plumbers Logo" class="logo">
+      </div>
+      <div class="header-title">
+        Technician Potential Commission Calculator
+      </div>
+      <div class="header-right-spacer"></div>
+    </header>
+
+    <section class="calculator">
+      <form id="commissionForm" autocomplete="off" novalidate>
+        <input type="hidden" id="canon_paymentReceived" name="canon_paymentReceived" value="">
+        <input type="hidden" id="canon_paymentMethod" name="canon_paymentMethod" value="">
+        <input type="hidden" id="canon_creditFeeAdded" name="canon_creditFeeAdded" value="">
+
+        <div class="button-group">
+          <button id="managerialAssistanceBtn"
+                  class="large-button red dynamic-button non-assisted"
+                  type="button"
+                  aria-label="Toggle Managerial Assistance">
+            NON-ASSISTED SALE
+          </button>
+        </div>
+
+        <table class="input-data">
+          <tbody>
+            <tr>
+              <th>Technician's Name:</th>
+              <td>
+                <input type="text" id="tn" name="tn" placeholder="Enter Technician's name" aria-label="Technician's Name">
+              </td>
+              <th>Invoice Number:</th>
+              <td>
+                <input type="text" id="in" name="in" placeholder="Enter invoice number" aria-label="Invoice Number">
+              </td>
+            </tr>
+
+            <tr>
+              <th>Total Price:</th>
+              <td>
+                <input type="text" inputmode="decimal" id="tp" name="tp" value="$0.00" aria-label="Total Price">
+              </td>
+
+              <th>
+                Project Duration (Hours):
+                <button type="button"
+                        class="tip-btn"
+                        data-tip="Total duration of the project in hrs."
+                        aria-label="Project Duration tooltip">?</button>
+              </th>
+              <td>
+                <input type="text" inputmode="decimal" id="pd" name="pd" value="1.00 hrs" aria-label="Project Duration">
+              </td>
+            </tr>
+
+            <tr>
+              <th>Material Expenses:</th>
+              <td>
+                <input type="text" inputmode="decimal" id="material" name="material" value="$0.00" aria-label="Material Expenses">
+              </td>
+              <th>Job Address:</th>
+              <td>
+                <input type="text" id="ja" name="ja" placeholder="Enter job address" aria-label="Job Address">
+              </td>
+            </tr>
+
+            <tr>
+              <th>Other Expense (Base):</th>
+              <td>
+                <input type="text" inputmode="decimal" id="oe" name="oe" value="$0.00" aria-label="Other Expense Base">
+              </td>
+              <th>Date:</th>
+              <td>
+                <input type="text" inputmode="numeric" id="date" name="date" aria-label="Date">
+              </td>
+            </tr>
+
+            <tr>
+              <th>CC Fee (3%):</th>
+              <td>
+                <input type="text" id="ccFee" name="ccFee" value="$0.00" readonly aria-label="Credit Card Fee 3 Percent">
+              </td>
+              <th>Total OE:</th>
+              <td>
+                <input type="text" id="totalOE" name="totalOE" value="$0.00" readonly aria-label="Total Other Expense">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="input-data input-data--labor">
+          <thead>
+            <tr>
+              <th colspan="4">
+                Labor Details
+                <button type="button"
+                        class="tip-btn"
+                        data-tip="Man-hours (labor time)."
+                        aria-label="Labor Details tooltip">?</button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Day 1:</th>
+              <td><input type="text" inputmode="decimal" id="day1" name="day1" value="0.00 hrs" aria-label="Labor Day 1 Hours"></td>
+              <th>Day 2:</th>
+              <td><input type="text" inputmode="decimal" id="day2" name="day2" value="0.00 hrs" aria-label="Labor Day 2 Hours"></td>
+            </tr>
+            <tr>
+              <th>Day 3:</th>
+              <td><input type="text" inputmode="decimal" id="day3" name="day3" value="0.00 hrs" aria-label="Labor Day 3 Hours"></td>
+              <th>Day 4:</th>
+              <td><input type="text" inputmode="decimal" id="day4" name="day4" value="0.00 hrs" aria-label="Labor Day 4 Hours"></td>
+            </tr>
+            <tr>
+              <th>Day 5:</th>
+              <td><input type="text" inputmode="decimal" id="day5" name="day5" value="0.00 hrs" aria-label="Labor Day 5 Hours"></td>
+              <th>Additional Hours:</th>
+              <td><input type="text" inputmode="decimal" id="ah" name="ah" value="0.00 hrs" aria-label="Additional Hours"></td>
+            </tr>
+            <tr>
+              <th>Total Overtime Hours:</th>
+              <td><input type="text" inputmode="decimal" id="toh" name="toh" value="0.00 hrs" aria-label="Total Overtime Hours"></td>
+              <th>Total Hours:</th>
+              <td><input type="text" id="totalHours" name="totalHours" readonly value="0.00 hrs" aria-label="Total Labor Hours"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="input-data">
+          <tbody>
+            <tr>
+              <th colspan="2">Job Explanation &amp; Notes:</th>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <textarea id="notes" name="notes" rows="4" placeholder="Enter notes here" aria-label="Job Explanation and Notes"></textarea>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="question-section question-cards" aria-label="Payment Questions">
+          <div id="question1" class="question-card">
+            <label>Is the payment received?</label>
+            <button type="button" class="dynamic-button qa-btn" data-q="1" data-a="yes" aria-label="Yes" aria-pressed="false">Yes</button>
+            <button type="button" class="dynamic-button qa-btn" data-q="1" data-a="no" aria-label="No" aria-pressed="false">No</button>
+            <button type="button" class="dynamic-button qa-btn" data-q="1" data-a="account" aria-label="BAYSHORE ACCOUNT" aria-pressed="false">BAYSHORE ACCOUNT</button>
+          </div>
+
+          <div id="question2" class="question-card is-hidden">
+            <label>How was the payment received?</label>
+            <button type="button" class="dynamic-button qa-btn" data-q="2" data-a="debit" aria-label="Debit Card" aria-pressed="false">Debit Card</button>
+            <button type="button" class="dynamic-button qa-btn" data-q="2" data-a="cash" aria-label="Cash" aria-pressed="false">Cash</button>
+            <button type="button" class="dynamic-button qa-btn" data-q="2" data-a="online" aria-label="Online" aria-pressed="false">Online</button>
+            <button type="button" class="dynamic-button qa-btn" data-q="2" data-a="creditCard" aria-label="Credit Card" aria-pressed="false">Credit Card</button>
+            <button type="button" class="dynamic-button qa-btn" data-q="2" data-a="check" aria-label="Check" aria-pressed="false">Check</button>
+          </div>
+
+          <div id="questionCheck" class="question-card is-hidden">
+            <label>Enter Check Number:</label>
+            <input type="text" id="checkNumber" name="checkNumber" placeholder="Enter Check Number" aria-label="Check Number">
+          </div>
+
+          <div id="questionCash" class="question-card is-hidden">
+            <label>Enter Cash Amount:</label>
+            <input type="text" inputmode="decimal" id="cashAmount" name="cashAmount" value="$0.00" aria-label="Cash Amount">
+          </div>
+
+          <div id="question3" class="question-card is-hidden">
+            <label>Is 3% credit card fee added?</label>
+            <button type="button" class="dynamic-button qa-btn" data-q="3" data-a="yes" aria-label="Yes" aria-pressed="false">Yes</button>
+            <button type="button" class="dynamic-button qa-btn" data-q="3" data-a="no" aria-label="No" aria-pressed="false">No</button>
+          </div>
+        </div>
+
+        <table class="input-data input-data--primary">
+          <thead>
+            <tr>
+              <th colspan="4">For Office Use Only</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>SW21/RP21:</th>
+              <td><input type="text" id="sw" name="sw" readonly aria-label="SW21/RP21"></td>
+              <th>WH32:</th>
+              <td><input type="text" id="wh" name="wh" readonly aria-label="WH32"></td>
+            </tr>
+            <tr>
+              <th>RD15/UL15:</th>
+              <td><input type="text" id="rd" name="rd" readonly aria-label="RD15/UL15"></td>
+              <th>BPP%:</th>
+              <td><input type="text" id="bpp" name="bpp" readonly aria-label="BPP PERCENT"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="output-group">
+          <div class="commission-display">
+            <p>Technician Commission: <span id="totalCommission">$0.00</span></p>
+
+            <p id="salesCommissionLabel" class="is-hidden">
+              Sales Commission: <span id="salesCommission"></span>
+            </p>
+          </div>
+        </div>
+
+        <div class="button-group action-bar action-bar--main no-print">
+          <button type="button" id="calculateBtn" class="action-bar__btn" aria-label="Calculate Commission">
+            Calculate Potential Commission
+          </button>
+          <button type="button" id="printButton" class="action-bar__btn action-bar__btn--primary" aria-label="Print Document">
+            Print
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section id="printSheet" class="is-hidden" aria-hidden="true"></section>
+  </main>
+
+  <script src="comSAMA.js"></script>
+</body>
+</html>

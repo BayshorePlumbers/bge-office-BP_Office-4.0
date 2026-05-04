@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self';
+                 img-src 'self' data: https:;
+                 style-src 'self';
+                 script-src 'self';
+                 connect-src 'self' https:;
+                 base-uri 'self';
+                 form-action 'self';" />
+
+  <title>Water Heater Bidding Calculator - Bayshore Plumbers</title>
+  <meta name="theme-color" content="#011B2E" />
+
+  <!-- SAM 3.0 shared styles (screen + print) -->
+  <link rel="stylesheet" href="../assets/css/bp-core.css" type="text/css" />
+  <link rel="stylesheet" href="../assets/css/bp-calculator.css" type="text/css" />
+
+  <link rel="stylesheet" href="../assets/css/bp-print.css" media="print" />
+  <link rel="stylesheet" href="../assets/css/bp-calculator-print.css" media="print" />
+
+  <!-- Shared UI helpers (safe; no inline styles) -->
+  <script src="../assets/js/bp-ui.js" defer></script>
+
+  <!-- Calculator logic -->
+  <script src="heater.js" defer></script>
+</head>
+
+<body class="bp-ready">
+  <header>
+    <div class="logo-container">
+      <img src="../assets/img/BP.png" alt="Bayshore Plumbers Logo" class="logo" />
+    </div>
+    <h1>Water Heater Bidding Calculator</h1>
+    <hr class="header-separator" />
+  </header>
+
+  <main class="container">
+    <form id="biddingForm">
+      <!-- Section 1: Basic Options (aligned to upper.html pattern) -->
+      <section class="form-section">
+        <div class="form-group">
+          <label for="et">Estimated Time (hrs):</label>
+          <input type="number" id="et" name="et" min="0" step="0.1" placeholder="Enter Estimated Time" />
+        </div>
+
+        <div class="form-group">
+          <label for="material">Material Expenses ($):</label>
+          <input type="number" id="material" name="material" placeholder="Enter Material Expenses" min="0" />
+        </div>
+
+        <div class="form-group">
+          <label for="am">Additional Manpower:</label>
+          <input type="number" id="am" name="am" placeholder="Enter Additional Manpower" min="0" />
+        </div>
+
+        <div class="form-group">
+          <label for="others">Other Expenses ($):</label>
+          <input type="number" id="others" name="others" placeholder="Enter Other Expenses (if any)" min="0" />
+        </div>
+
+        <div class="form-group">
+          <label for="discount">Discounts:</label>
+          <select id="discount" name="discount">
+            <option value="no discount">No Discount</option>
+            <option value="5%">5 Percent</option>
+            <option value="10%">10 Percent</option>
+          </select>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label for="permits">Permits Required:</label>
+          <input type="checkbox" id="permits" name="permits" />
+        </div>
+
+        <div class="form-group">
+          <label for="financing">Financing Option:</label>
+          <select id="financing" name="financing">
+            <option value="none">None</option>
+            <option value="2832">Plan 2832</option>
+            <option value="2611">Plan 2611</option>
+            <option value="9998">Plan 9998</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Section 2: Technical Options (aligned checkbox row to upper.html) -->
+      <section class="form-section">
+        <div class="form-group checkbox-group">
+          <label for="afterHours">After Hours:</label>
+          <input type="checkbox" id="afterHours" name="afterHours" />
+        </div>
+      </section>
+
+      <!-- Section 3: Output (MATCH upper.html) -->
+      <section class="form-section output-section">
+        <div class="output-group">
+          <label for="finalPrice">Final Bidding Price:</label>
+          <span id="finalPrice">$0.00</span>
+        </div>
+
+        <div id="breakdown" class="breakdown"></div>
+      </section>
+
+      <!-- Section 4: Buttons (MATCH upper.html) -->
+      <section class="form-section buttons-section">
+        <button type="button" id="calculateBtn">Calculate</button>
+        <button type="button" id="printBtn">Print</button>
+      </section>
+    </form>
+  </main>
+</body>
+</html>

@@ -1,0 +1,13 @@
+/* bp-print.css — shared print rules for Bayshore web apps (starter) */
+@media print {
+  html, body { background: #fff !important; }
+  .bp-topbar { position: static; border: 0; box-shadow: none; }
+}
+
+@media print {
+  .bp-topbar__logo,
+  img.logo {
+    height: 28px !important;
+    max-width: 180px !important;
+  }
+}

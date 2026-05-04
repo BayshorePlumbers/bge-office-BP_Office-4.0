@@ -1,0 +1,306 @@
+<!-- htech.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+  <!-- Bayshore CSP (self-only) -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self';
+                 img-src 'self' data:;
+                 style-src 'self';
+                 script-src 'self';
+                 connect-src 'self'" />
+  <!-- Shared on-screen and print styles -->
+  <link href="payrollstyle.css" rel="stylesheet" type="text/css" />
+  <link href="payrollprint.css" media="print" rel="stylesheet" type="text/css" />
+
+  <!-- Favicon -->
+  <link href="favicon.ico" rel="icon" type="image/x-icon" />
+
+  <title>Calculadora de Kicker Potencial del Técnico - Bayshore Plumbers</title>
+</head>
+
+<body>
+  <main class="container" role="main">
+    <header class="top-bar no-print">
+      <div class="header-left">
+        <img src="BP.png" alt="Bayshore Plumbers Logo" class="logo" />
+      </div>
+      <div class="header-title">Calculadora de Kicker Potencial del Técnico</div>
+      <div class="header-right-spacer"></div>
+    </header>
+
+    <section class="calculator">
+      <form id="htechForm">
+
+        <!-- Job Details -->
+        <table class="input-data">
+          <tbody>
+
+            <!-- Job Type Selector (with conditional blocks like OPS) -->
+            <tr>
+              <th>Tipo de trabajo:</th>
+              <td colspan="3">
+                <div class="form-group form-group-jobtype">
+                  <label class="subheading" for="jobType">Tipo de trabajo</label>
+                  <select id="jobType" name="jobType">
+                    <option selected value="company">Trabajo de compañía</option>
+                    <option value="office">Oficina (Ali / Karen)</option>
+                    <option value="technician">Técnico (Eddie / Solis)</option>
+                    <option value="sales">Ventas (Bo)</option>
+                    <option value="newtech">Nuevo técnico (Omar / Rafael)</option>
+                    <option value="hourlytech">Técnico por hora</option>
+                  </select>
+
+                  <!-- GNI (Company only) -->
+                  <div id="gniContainer" class="is-hidden gni-container">
+                    <label class="checkbox-row">
+                      <input id="gni" type="checkbox" />
+                      <span>¿Es un trabajo GNI?</span>
+                    </label>
+                  </div>
+
+                  <!-- S/W/G/CS (Technician + Sales only) -->
+                  <div id="swgcsContainer" class="is-hidden swgcs-container">
+                    <label class="swgcs-label">¿Es un trabajo S/W/G/CS?</label>
+                    <div class="button-group button-group-left">
+                      <button class="dynamic-button qa-btn" id="swgcsYes" type="button" aria-pressed="false">SÍ</button>
+                      <button class="dynamic-button qa-btn" id="swgcsNo" type="button" aria-pressed="true">NO</button>
+                    </div>
+                    <input id="swgcs" name="swgcs" type="hidden" value="no" />
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Technician (required for kicker) - READ ONLY -->
+            <tr>
+              <th>Técnico:</th>
+              <td colspan="3">
+                <div class="form-group">
+                  <label class="subheading" for="technicianSelect">Técnico (requerido para el kicker)</label>
+
+                  <!-- Keep the same ID so JS continues to work, but make it read-only via disabled -->
+                  <select id="technicianSelect" name="technicianSelect" disabled>
+                    <option value="Edvin Garcia" selected>Edvin Garcia</option>
+                  </select>
+
+                  <div id="techSelectHint" class="field-hint" data-for="technicianSelect"></div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>Dirección del trabajo:</th>
+              <td>
+                <input id="ja" name="ja" placeholder="Ingrese la dirección del trabajo" type="text" autocomplete="off" />
+              </td>
+
+              <th>Precio total:</th>
+              <td>
+                <input id="tp" name="tp" placeholder="Ingrese el precio final de venta" type="text" inputmode="decimal" autocomplete="off" />
+              </td>
+            </tr>
+
+            <tr>
+              <th>Fecha:</th>
+              <td>
+                <input id="date" name="date" type="text" placeholder="MM/DD/YYYY" inputmode="numeric" autocomplete="off" />
+              </td>
+
+              <th class="th-with-tip">
+                Duración del proyecto (horas):
+                <button type="button" class="tip-btn" data-tip="pd" aria-label="Ayuda de duración del proyecto">i</button>
+              </th>
+              <td>
+                <input id="pd" name="pd" placeholder="Ingrese la duración del proyecto" type="text" inputmode="decimal" autocomplete="off" />
+              </td>
+            </tr>
+
+            <tr>
+              <th>Gastos de materiales:</th>
+              <td>
+                <input id="material" name="material" placeholder="Ingrese gastos de materiales" type="text" inputmode="decimal" autocomplete="off" />
+              </td>
+
+              <th>Otros gastos (Base):</th>
+              <td>
+                <input id="oe" name="oe" placeholder="Ingrese otros gastos" type="text" inputmode="decimal" autocomplete="off" />
+              </td>
+            </tr>
+
+            <tr>
+              <th>Tarifa de tarjeta (3%):</th>
+              <td>
+                <input id="ccFeeDisplay" name="ccFeeDisplay" type="text" readonly value="$0.00" />
+              </td>
+
+              <th>Otros gastos (Total):</th>
+              <td>
+                <input id="oeTotalDisplay" name="oeTotalDisplay" type="text" readonly value="$0.00" />
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+
+        <!-- Labor Details (Hours) -->
+        <table class="input-data input-data--labor">
+          <thead>
+            <tr><th colspan="4">Detalles de mano de obra</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Día 1 (Horas):</th>
+              <td><input id="day1" name="day1" type="text" inputmode="decimal" autocomplete="off" /></td>
+              <th>Día 2 (Horas):</th>
+              <td><input id="day2" name="day2" type="text" inputmode="decimal" autocomplete="off" /></td>
+            </tr>
+
+            <tr>
+              <th>Día 3 (Horas):</th>
+              <td><input id="day3" name="day3" type="text" inputmode="decimal" autocomplete="off" /></td>
+              <th>Día 4 (Horas):</th>
+              <td><input id="day4" name="day4" type="text" inputmode="decimal" autocomplete="off" /></td>
+            </tr>
+
+            <tr>
+              <th>Día 5 (Horas):</th>
+              <td><input id="day5" name="day5" type="text" inputmode="decimal" autocomplete="off" /></td>
+              <th>Horas adicionales:</th>
+              <td><input id="ah" name="ah" type="text" inputmode="decimal" autocomplete="off" /></td>
+            </tr>
+
+            <tr>
+              <th>Horas extra:</th>
+              <td><input id="toh" name="toh" type="text" inputmode="decimal" autocomplete="off" /></td>
+              <th class="th-with-tip">
+                Horas totales:
+                <button type="button" class="tip-btn" data-tip="labor" aria-label="Ayuda de horas de mano de obra">i</button>
+              </th>
+              <td><input id="totalHours" name="totalHours" readonly type="text" /></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Payment (OPS layout) -->
+        <table class="input-data">
+          <tbody>
+            <tr><th colspan="4">Pago</th></tr>
+
+            <tr>
+              <th>¿Pago recibido?</th>
+              <td colspan="3">
+                <div id="paymentReceivedContainer" class="payment-received-container">
+                  <div class="button-group button-group-left">
+                    <button class="dynamic-button qa-btn" id="payRecYes" type="button" aria-pressed="false">SÍ</button>
+                    <button class="dynamic-button qa-btn" id="payRecNo" type="button" aria-pressed="true">NO</button>
+                  </div>
+                  <input id="paymentReceived" name="paymentReceived" type="hidden" value="no" />
+                </div>
+              </td>
+            </tr>
+
+            <tr id="paymentMethodRow" class="is-hidden">
+              <th>Método de pago</th>
+              <td colspan="3">
+                <div id="paymentMethodContainer">
+                  <div class="button-group button-group-left">
+                    <button class="dynamic-button qa-btn" id="payMethodCash" type="button" aria-pressed="false">EFECTIVO</button>
+                    <button class="dynamic-button qa-btn" id="payMethodCheck" type="button" aria-pressed="false">CHEQUE</button>
+                    <button class="dynamic-button qa-btn" id="payMethodCard" type="button" aria-pressed="false">TARJETA</button>
+                    <button class="dynamic-button qa-btn" id="payMethodAccounts" type="button" aria-pressed="false">CUENTAS</button>
+                  </div>
+                  <input id="paymentMethod" name="paymentMethod" type="hidden" value="" />
+                </div>
+              </td>
+            </tr>
+
+            <tr id="cashAmountRow" class="is-hidden">
+              <th>Monto en efectivo</th>
+              <td colspan="3">
+                <input id="cashAmount" name="cashAmount" placeholder="Ingrese el monto recibido en efectivo" type="text" inputmode="decimal" autocomplete="off" />
+              </td>
+            </tr>
+
+            <tr id="checkNumberRow" class="is-hidden">
+              <th>Número de cheque</th>
+              <td colspan="3">
+                <input id="checkNumber" name="checkNumber" placeholder="Ingrese el número de cheque" type="text" autocomplete="off" />
+              </td>
+            </tr>
+
+            <tr id="cardFeeRow" class="is-hidden">
+              <th>¿Tarifa de tarjeta agregada?</th>
+              <td colspan="3">
+                <div id="cardFeeContainer">
+                  <div class="button-group button-group-left">
+                    <button class="dynamic-button qa-btn" id="cardFeeYes" type="button" aria-pressed="false">SÍ</button>
+                    <button class="dynamic-button qa-btn" id="cardFeeNo" type="button" aria-pressed="true">NO</button>
+                  </div>
+                  <input id="cardFeeAdded" name="cardFeeAdded" type="hidden" value="no" />
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- For Office Use Only -->
+        <table class="input-data input-data--primary">
+          <thead>
+            <tr><th colspan="4">Solo para uso de oficina</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>SW21/RP21:</th>
+              <td><input id="sw" name="sw" readonly type="text" /></td>
+              <th>WH32:</th>
+              <td><input id="wh" name="wh" readonly type="text" /></td>
+            </tr>
+            <tr>
+              <th>RD15/UL15:</th>
+              <td><input id="rd" name="rd" readonly type="text" /></td>
+              <th>BPP%:</th>
+              <td><input id="bpp" name="bpp" readonly type="text" /></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Output Group -->
+        <div class="output-group">
+          <div class="commission-display">Kicker: <span id="kicker">0.00</span></div>
+
+          <div class="job-status is-hidden" id="jobStatus">
+            <div class="job-status-title" id="jobStatusTitle"></div>
+            <div class="job-status-detail" id="jobStatusDetail"></div>
+          </div>
+
+          <!-- Hidden internal values (for print) -->
+          <input id="enteredTotalPrice" type="hidden" value="" />
+          <input id="updatedTotalPrice" type="hidden" value="" />
+          <input id="commissionAmount" type="hidden" value="" />
+          <input id="totalCommission" type="hidden" value="" />
+          <input id="profitBeforeKicker" type="hidden" value="" />
+          <input id="profitAfterKicker" type="hidden" value="" />
+          <input id="bppPrintEn" type="hidden" value="" />
+        </div>
+
+        <!-- Buttons -->
+        <div class="button-group action-bar action-bar--main no-print">
+          <button id="calculateBtn" type="button" class="action-bar__btn">Calcular</button>
+          <button id="printButton" type="button" class="action-bar__btn action-bar__btn--primary">Imprimir</button>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- PRINT SHEET: do not remove (required for Bayshore print system) -->
+    <section id="printSheet" class="is-hidden" aria-hidden="true"></section>
+  </main>
+
+  <!-- Scripts -->
+  <script src="htechEGSAMA.js"></script>
+</body>
+</html>

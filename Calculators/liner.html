@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self';
+                 img-src 'self' data: https:;
+                 style-src 'self';
+                 script-src 'self';
+                 connect-src 'self' https:;
+                 base-uri 'self';
+                 form-action 'self';" />
+
+  <title>Liner Bidding Calculator - Bayshore Plumbers</title>
+  <meta name="theme-color" content="#011B2E" />
+
+  <!-- SAM 3.0 shared styles (screen + print) -->
+  <link rel="stylesheet" href="../assets/css/bp-core.css" type="text/css" />
+  <link rel="stylesheet" href="../assets/css/bp-calculator.css" type="text/css" />
+
+  <link rel="stylesheet" href="../assets/css/bp-print.css" media="print" />
+  <link rel="stylesheet" href="../assets/css/bp-calculator-print.css" media="print" />
+
+  <!-- Shared UI helpers (safe; no inline styles) -->
+  <script src="../assets/js/bp-ui.js" defer></script>
+
+  <!-- Calculator logic -->
+  <script src="liner.js" defer></script>
+</head>
+
+<body class="bp-ready">
+  <header>
+    <div class="logo-container">
+      <img src="../assets/img/BP.png" alt="Bayshore Plumbers Logo" class="logo" />
+    </div>
+    <h1>Liner Bidding Calculator</h1>
+    <hr class="header-separator" />
+  </header>
+
+  <main class="container">
+    <form id="linerForm" novalidate>
+      <!-- Section 1: Liner Details -->
+      <section class="form-section">
+        <div class="form-group">
+          <label for="length" title="Enter the length in feet. Minimum is 1.">Length (ft):</label>
+          <input type="number" id="length" name="length" min="1" required placeholder="Enter length" />
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label for="houseCleanOut" title="House clean out install/repair required?">
+            House Clean Out Install/Repair Required?
+          </label>
+          <input type="checkbox" id="houseCleanOut" name="houseCleanOut" />
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label for="propertyLineCleanOut" title="Property line clean out required?">
+            Property Line Clean Out Required?
+          </label>
+          <input type="checkbox" id="propertyLineCleanOut" name="propertyLineCleanOut" />
+        </div>
+      </section>
+
+      <!-- Section 2: Landscape & Expenses -->
+      <section class="form-section">
+        <div class="form-group">
+          <label for="landscape" title="Select the type of landscape repair needed.">Landscape Repair:</label>
+          <select id="landscape" name="landscape">
+            <option value="0">None</option>
+            <option value="300">Concrete</option>
+            <option value="300">Pavers</option>
+            <option value="50">Grass</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="reInstate" title="Enter how many re-instates are required.">Re-Instate Required? How Many:</label>
+          <input type="number" id="reInstate" name="reInstate" min="0" placeholder="Enter number" />
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label for="buildingPermit" title="Is a building permit required?">Building Permit Required?</label>
+          <input type="checkbox" id="buildingPermit" name="buildingPermit" />
+        </div>
+
+        <div class="form-group">
+          <label for="otherExpenses" title="Enter any other additional expenses.">Other Expenses:</label>
+          <input type="number" id="otherExpenses" name="otherExpenses" min="0" placeholder="Enter other expenses" />
+        </div>
+
+        <div class="form-group">
+          <label for="discount">Discounts:</label>
+          <select id="discount" name="discount">
+            <option value="no discount">No Discount</option>
+            <option value="5%">5 Percent</option>
+            <option value="10%">10 Percent</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Section 3: Technical Options -->
+      <section class="form-section">
+        <div class="form-group checkbox-group">
+          <label for="afterHours">After Hours:</label>
+          <input type="checkbox" id="afterHours" name="afterHours" />
+        </div>
+      </section>
+
+      <!-- Section 4: Output -->
+      <section class="form-section output-section">
+        <div class="output-group">
+          <label for="totalPrice">Total Price:</label>
+          <span id="totalPrice">$0.00</span>
+        </div>
+
+        <div id="breakdown" class="breakdown"></div>
+      </section>
+
+      <!-- Section 5: Buttons -->
+      <section class="form-section buttons-section">
+        <button type="button" id="calculateBtn">Calculate</button>
+        <button type="button" id="printBtn">Print</button>
+      </section>
+    </form>
+  </main>
+</body>
+</html>

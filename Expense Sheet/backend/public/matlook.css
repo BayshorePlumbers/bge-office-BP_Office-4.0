@@ -1,0 +1,286 @@
+/* ==============================
+   Global Reset & Base
+   ============================== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root{
+  --brand-blue: #0066cc;
+  --brand-blue-dark: #005cb5;
+  --brand-blue-darker: #004d99;
+  --brand-orange: #ff6600;
+  --ink: #222;
+  --bg: #f4f6f9;
+  --card: #fff;
+  --muted: #e5e7eb;
+  --muted-2: #cbd5e1;
+  --shadow: 0 4px 8px rgba(0,0,0,.06);
+  --radius: 12px;
+}
+
+html, body { height: 100%; }
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ==============================
+   Header / Navbar
+   ============================== */
+.header-container {
+  position: sticky; top: 0; z-index: 1000;
+  background: var(--brand-blue);
+  box-shadow: 0 2px 4px rgba(0,0,0,.08);
+  width: 100%;
+}
+
+.navbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 22px; gap: 12px;
+}
+
+.nav-logo, .cart-logo {
+  width: 150px; height: 50px;
+  background: url("BP.png") no-repeat center/contain;
+}
+
+.nav-search { display: flex; align-items: center; gap: 10px; }
+
+/* Search input */
+.search-input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--muted-2);
+  width: 320px; max-width: 60vw;
+  background: #fff;
+}
+.search-input:focus {
+  outline: none;
+  border-color: var(--brand-blue);
+  box-shadow: 0 0 0 3px rgba(0,102,204,.2);
+}
+.search-icon i { font-size: 20px; color: #fff; cursor: pointer; }
+
+/* Cart icon */
+.cart-icon { position: relative; cursor: pointer; }
+.cart-counter {
+  position: absolute; top: -8px; right: -8px;
+  background: #d00; color: #fff; border-radius: 999px;
+  padding: 3px 7px; font-size: 12px; font-weight: 700;
+}
+
+/* ==============================
+   Generic Grid Container
+   ============================== */
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  padding: 24px;
+  margin: 0 auto;
+  max-width: 1600px; /* show more across on desktop */
+}
+
+/* ==============================
+   Card styles (materials/equipment/permits)
+   ============================== */
+.material, .equipment, .permit {
+  background: var(--card);
+  border: 1px solid var(--muted);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+  transition: transform .08s ease-in-out;
+}
+.material:hover, .equipment:hover, .permit:hover { transform: translateY(-1px); }
+
+.details p { margin: 4px 0; word-break: break-word; }
+
+/* Media – uniform, fast, no layout shift */
+.material img, .equipment img, .permit img {
+  width: 100%;
+  aspect-ratio: 16 / 9;   /* keeps rows tidy */
+  height: auto;           /* let aspect-ratio control height */
+  object-fit: contain;
+  border-radius: 8px;
+  background: #f0f0f0;
+  padding: 4px;
+}
+
+/* Buttons */
+.add-to-cart, .remove-button {
+  background: var(--brand-orange);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 15px; font-weight: 600;
+  cursor: pointer;
+  transition: background-color .2s ease, transform .06s ease;
+}
+.add-to-cart:hover, .remove-button:hover {
+  background: #e65c00; transform: scale(1.02);
+}
+
+/* Section action buttons bar */
+.button-container {
+  display: flex; gap: 10px; margin: 20px 0 0;
+}
+.button-container button {
+  flex: 1; border: none; border-radius: var(--radius);
+  background: var(--brand-blue);
+  color: #fff; padding: 12px 16px; font-size: 16px; cursor: pointer;
+  transition: background-color .2s, transform .06s;
+}
+.button-container button:hover { background: var(--brand-blue-dark); transform: translateY(-1px); }
+
+/* ==============================
+   Pagination
+   ============================== */
+.pagination-container {
+  display: flex; justify-content: center; align-items: center;
+  gap: 8px; margin: 16px 0; padding: 8px;
+}
+.pagination-container button {
+  padding: 8px 12px; font-size: 14px; font-weight: 700;
+  background: var(--brand-blue); color: #fff;
+  border: 1px solid var(--brand-blue-darker);
+  border-radius: 8px; cursor: pointer;
+  transition: background-color .2s, transform .06s;
+}
+.pagination-container button:hover { background: var(--brand-blue-dark); transform: translateY(-1px); }
+.pagination-container button.active { background: var(--brand-blue-darker); cursor: default; transform: none; }
+.pagination-container button:disabled {
+  background: #e0e0e0; color: #999; border-color: #ccc; cursor: not-allowed;
+}
+.pagination-container .prev-next-btn { font-size: 12px; font-weight: 600; padding: 6px 10px; }
+
+/* ==============================
+   Cart page layout – dense rows, no overflow
+   ============================== */
+.cart-page .container {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px; padding: 20px;
+  width: 100%; max-width: 1600px;
+}
+
+/* Card internals used by cart items */
+.item-container {
+  display: flex; flex-direction: column; gap: 10px;
+  background: var(--card);
+  border: 1px solid var(--muted);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 12px;
+}
+.item-title { font-size: 16px; font-weight: 800; line-height: 1.3; margin: 0; word-break: break-word; }
+.item-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; justify-content: space-between; }
+.item-price { font-size: 15px; font-weight: 700; }
+
+/* Quantity controls */
+.quantity-control {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid var(--muted); border-radius: 8px;
+  padding: 6px 8px; background: #fff;
+}
+.quantity-control button {
+  padding: 6px 10px; border-radius: 6px;
+  border: 1px solid var(--muted); background: #f8fafc; cursor: pointer;
+}
+.quantity-control button:hover { background: #eef2f7; }
+.qty-value { display: inline-block; min-width: 28px; text-align: center; font-weight: 700; }
+
+/* Remove button placement */
+.item-actions { display: flex; justify-content: flex-end; }
+.add-to-cart, .remove-button { max-width: 100%; white-space: normal; }
+
+/* Category total blocks */
+.category-total {
+  display: block;
+  margin: 12px 8px 28px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid var(--muted);
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+/* Grand total – bigger & bolder */
+.total-price {
+  margin: 24px 12px;
+  padding: 14px 16px;
+  background: #fff;
+  border: 2px solid var(--brand-blue-darker);
+  border-radius: 12px;
+  font-size: 22px;
+  font-weight: 900;
+  display: flex; justify-content: space-between; align-items: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==============================
+   Forms on cart (top inputs)
+   ============================== */
+.input-fields table {
+  width: 100%; max-width: 1000px; margin: 16px auto;
+  background: #fff; border: 1px solid var(--muted); border-radius: 12px;
+  padding: 12px 16px;
+}
+.input-fields input[type="text"],
+.input-fields input[type="date"],
+.input-fields textarea {
+  width: 100%; padding: 10px 12px;
+  border: 1px solid var(--muted-2); border-radius: 8px; background: #fff;
+}
+.input-fields input:focus, .input-fields textarea:focus {
+  outline: none; border-color: var(--brand-blue);
+  box-shadow: 0 0 0 3px rgba(0,102,204,.2);
+}
+
+/* ==============================
+   Print
+   ============================== */
+@media print {
+  .header-container, .navbar, .pagination-container, .cart-icon, .add-to-cart, .remove-button { display: none !important; }
+  .container { padding: 0; }
+  .category-total, .total-price { border-color: #000; }
+  h1, h2 { text-align: center; }
+}
+
+/* ==============================
+   Responsive tweaks
+   ============================== */
+@media (max-width: 768px){
+  .navbar { flex-wrap: wrap; gap: 8px; }
+  .search-input { width: 100%; max-width: 100%; }
+  .container { padding: 16px; gap: 16px; }
+  .category-total, .total-price { margin-left: 8px; margin-right: 8px; }
+  .button-container { flex-direction: column; }
+}
+@media (max-width: 480px){
+  .item-title { font-size: 14px; }
+  .item-price { font-size: 14px; }
+}
+/* Make all cards equal height per row and pin the button to the bottom */
+.container { align-items: stretch; }
+
+.material, .equipment, .permit {
+  display: flex;
+  flex-direction: column;
+}
+
+.details { 
+  flex: 1;              /* takes up remaining space */
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.add-to-cart {
+  margin-top: auto;     /* pushes button to the bottom */
+  align-self: stretch;  /* same width look across cards */
+}

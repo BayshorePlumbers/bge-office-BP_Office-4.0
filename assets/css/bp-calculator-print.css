@@ -1,0 +1,178 @@
+/* /assets/css/bp-calculator-print.css */
+/* SAM 3.0 — Shared Calculator UI (Print) */
+/* Professional A4, dense, readable. Works alongside bp-print.css. */
+
+@page{
+  size: A4 portrait;
+  margin: 16mm;
+}
+
+@media print{
+  html, body{
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.35;
+    color: #000;
+    background: #fff;
+  }
+
+  /* Prevent awkward breaks */
+  header,
+  .container,
+  form,
+  .form-section,
+  table.input-data,
+  .final-price,
+  .output-section{
+    page-break-inside: avoid;
+  }
+
+  /* Tighten page chrome */
+  .container{
+    max-width: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  header{
+    text-align: center;
+    padding: 0 0 6mm;
+    margin: 0 0 6mm;
+    border-bottom: 1px solid #000;
+    background: transparent;
+  }
+
+  .logo-container{
+    margin: 0 0 3mm;
+  }
+
+  .logo{
+    max-width: 70px;
+    height: auto;
+  }
+
+  header h1{
+    font-size: 15pt;
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .header-separator{
+    display: none !important;
+  }
+
+  /* Remove screen-only decoration */
+  form{
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  /* Convert sections into compact blocks */
+  .form-section{
+    padding: 0 0 4mm !important;
+    margin: 0 0 4mm !important;
+    border-bottom: 1px solid #000 !important;
+    display: block !important;
+  }
+
+  .form-section:last-child{
+    border-bottom: none !important;
+    margin-bottom: 0 !important;
+  }
+
+  .form-group{
+    margin: 0 0 2.2mm !important;
+    display: block !important;
+  }
+
+  .form-group label{
+    font-weight: 700;
+    margin: 0 0 1mm !important;
+    color: #000 !important;
+  }
+
+  /* Hide interactive controls but show values if calculator prints a summary table */
+  input,
+  select,
+  textarea{
+    border: 1px solid #000 !important;
+    padding: 2.2mm 2.6mm !important;
+    border-radius: 0 !important;
+    min-height: auto !important;
+    font-size: 11pt !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Output emphasis */
+  .output-section{
+    border: 1px solid #000 !important;
+    background: transparent !important;
+    padding: 4mm !important;
+    margin-top: 4mm !important;
+  }
+
+  .output-group{
+    display: flex !important;
+    justify-content: space-between !important;
+    gap: 6mm !important;
+    border-bottom: 1px dotted #000 !important;
+    padding: 2mm 0 !important;
+  }
+
+  .output-group:last-child{
+    border-bottom: none !important;
+  }
+
+  #finalPrice{
+    font-size: 13pt !important;
+    font-weight: 700 !important;
+  }
+
+  #breakdown{
+    margin: 3mm 0 2mm !important;
+    font-size: 10.5pt !important;
+  }
+
+  /* Tables (used by some calculators for printable input summary) */
+  table.input-data{
+    width: 100% !important;
+    margin: 0 0 5mm 0 !important;
+    border-collapse: collapse !important;
+  }
+
+  table.input-data th,
+  table.input-data td{
+    border: 1px solid #000 !important;
+    padding: 2.4mm 2.6mm !important;
+    font-size: 10.8pt !important;
+    text-align: left !important;
+  }
+
+  table.input-data thead th{
+    font-weight: 700 !important;
+    text-align: center !important;
+  }
+
+  .final-price{
+    font-weight: 700 !important;
+    text-align: center !important;
+    font-size: 13pt !important;
+    margin-top: 5mm !important;
+  }
+
+  /* Hide interactive-only elements */
+  button,
+  .no-print,
+  .info-icon,
+  .info-popover{
+    display: none !important;
+  }
+}

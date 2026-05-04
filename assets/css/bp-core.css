@@ -1,0 +1,463 @@
+:root{
+  --bp-navy:#011B2E;
+  --bp-blue:#005FDE;
+  --bp-red:#AA001D;
+
+  --bp-bg:#F6F8FB;
+  --bp-text:#0B1B2A;
+  --bp-muted:#5B6B7A;
+  --bp-border:rgba(1,27,46,.10);
+
+  --bp-surface:rgba(255,255,255,.86);
+  --bp-glass:rgba(246,248,251,.72);
+
+  --bp-shadow-1:0 10px 22px rgba(1,27,46,.08);
+  --bp-shadow-2:0 16px 34px rgba(1,27,46,.10);
+
+  --bp-pad:18px;
+  --bp-maxw:1120px;
+
+  --bp-font:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+
+body{
+  margin:0;
+  font-family:var(--bp-font);
+  color:var(--bp-text);
+  background:var(--bp-bg);
+  background-image:
+    radial-gradient(900px 520px at 16% -10%, rgba(0,95,222,.10), transparent 60%),
+    radial-gradient(900px 520px at 120% 0%, rgba(1,27,46,.10), transparent 55%);
+}
+
+/* subtle reveal */
+body:not(.bp-ready) .bp-card,
+body:not(.bp-ready) .bp-action{
+  transform:translateY(6px);
+  opacity:0;
+}
+body.bp-ready .bp-card,
+body.bp-ready .bp-action{
+  transform:translateY(0);
+  opacity:1;
+  transition:opacity 260ms ease, transform 260ms ease;
+}
+
+/* Top bar */
+.bp-topbar{
+  position:sticky; top:0; z-index:50;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px;
+  padding:12px var(--bp-pad);
+  background:var(--bp-glass);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(1,27,46,.08);
+}
+
+/* ✅ More space on the left so logo never feels cramped */
+.bp-topbar__left{
+  display:flex;
+  align-items:center;
+  gap:16px; /* was 14 */
+  min-width:0;
+}
+
+/* ✅ Bigger, more visible logo (width-wise + height) */
+/* ✅ Bigger, clearer BP logo */
+.bp-topbar__logo{
+  width:72px;          /* was 56 */
+  height:72px;         /* keep equal so it stays clean + not distorted */
+  border-radius:14px;  /* slightly less rounding so the logo fills better */
+  box-shadow:0 16px 30px rgba(1,27,46,.18);
+  border:1px solid rgba(1,27,46,.12);
+  background:#fff;
+  padding:6px;         /* gives the logo breathing room if BP.png has tight edges */
+  object-fit:contain;  /* ensures we see the full logo */
+  flex:0 0 auto;
+}
+
+/* Give titles a little breathing room */
+.bp-topbar__titles{
+  display:flex;
+  flex-direction:column;
+  line-height:1.05;
+  padding-top:1px;
+}
+.bp-topbar__title{
+  font-weight:780;
+  font-size:14px;
+  letter-spacing:.2px;
+  color:var(--bp-navy);
+}
+.bp-topbar__subtitle{
+  font-weight:640;
+  font-size:12px;
+  color:var(--bp-muted);
+}
+.bp-chip{
+  padding:9px 11px;
+  border-radius:999px;
+  border:1px solid var(--bp-border);
+  background:rgba(255,255,255,.70);
+  font-weight:700;
+  font-size:12px;
+  color:var(--bp-muted);
+}
+
+/* Page */
+.bp-page{
+  max-width:var(--bp-maxw);
+  margin:0 auto;
+  padding:14px var(--bp-pad) 26px;
+}
+
+/* Trust strip */
+.bp-trust{
+  margin-top:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid rgba(1,27,46,.10);
+  background:rgba(255,255,255,.70);
+  box-shadow:var(--bp-shadow-1);
+}
+.bp-trust__left{display:flex; gap:8px; flex-wrap:wrap}
+.bp-trust__pill{
+  padding:8px 10px;
+  border-radius:999px;
+  border:1px solid rgba(1,27,46,.08);
+  background:rgba(255,255,255,.75);
+  font-weight:700;
+  font-size:12px;
+  color:var(--bp-navy);
+}
+.bp-trust__right{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+.bp-trust__link{
+  padding:8px 10px;
+  border-radius:999px;
+  border:1px solid rgba(1,27,46,.10);
+  background:rgba(255,255,255,.65);
+  font-weight:750;
+  font-size:12px;
+  color:var(--bp-navy);
+  text-decoration:none;
+}
+.bp-trust__link--strong{
+  background:rgba(0,95,222,.12);
+  border-color:rgba(0,95,222,.30);
+}
+
+/* Top actions */
+.bp-actions{
+  margin-top:10px;
+  display:grid;
+  gap:10px;
+}
+
+/* ✅ 2-column top actions */
+.bp-actions--two{
+  grid-template-columns:repeat(2, minmax(0,1fr));
+}
+
+@media (max-width:900px){
+  .bp-actions--two{grid-template-columns:1fr}
+}
+
+.bp-action{
+  display:grid;
+  gap:6px;
+  padding:12px;
+  border-radius:18px;
+  border:1px solid rgba(1,27,46,.10);
+  background:rgba(255,255,255,.80);
+  box-shadow:var(--bp-shadow-1);
+  text-decoration:none;
+  color:var(--bp-navy);
+  transition:transform 160ms ease, box-shadow 220ms ease, border-color 180ms ease;
+  min-height:90px;
+}
+.bp-action:hover{
+  transform:translateY(-1px);
+  box-shadow:var(--bp-shadow-2);
+  border-color:rgba(0,95,222,.18);
+}
+.bp-action:active{transform:scale(.995)}
+.bp-action:focus-visible{
+  outline:none;
+  box-shadow:0 0 0 4px rgba(0,95,222,.14), var(--bp-shadow-2);
+  border-color:rgba(0,95,222,.55);
+}
+.bp-action--primary{
+  background:linear-gradient(135deg, rgba(0,95,222,.12), rgba(255,255,255,.82));
+  border-color:rgba(0,95,222,.22);
+}
+.bp-action__kicker{
+  font-size:10.5px;
+  font-weight:700;
+  letter-spacing:.22px;
+  text-transform:uppercase;
+  color:rgba(0,95,222,.95);
+}
+.bp-action__title{
+  font-size:16px;
+  font-weight:760;
+  letter-spacing:-.1px;
+}
+.bp-action__meta{
+  font-size:12px;
+  font-weight:600;
+  color:rgba(91,107,122,.92);
+}
+
+/* Hero */
+.bp-hero{padding:12px 2px 10px}
+.bp-hero__row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:12px 0 10px;
+}
+.bp-hero__headline{
+  margin:0;
+  font-size:22px;
+  line-height:1.05;
+  letter-spacing:-.28px;
+  color:var(--bp-navy);
+  font-weight:760;
+}
+
+/* Buttons */
+.bp-ghost{
+  border:1px solid rgba(1,27,46,.10);
+  background:rgba(255,255,255,.65);
+  color:var(--bp-muted);
+  padding:10px 12px;
+  border-radius:999px;
+  font-weight:700;
+  font-size:12px;
+}
+.bp-ghost:active{transform:scale(.99)}
+.bp-ghost:focus-visible{
+  outline:none;
+  box-shadow:0 0 0 4px rgba(0,95,222,.14);
+  border-color:rgba(0,95,222,.55);
+}
+
+/* Search */
+.bp-input{
+  width:100%;
+  border:1px solid rgba(1,27,46,.10);
+  border-radius:16px;
+  padding:13px 14px;
+  font-size:16px;
+  outline:none;
+  background:rgba(255,255,255,.86);
+  color:var(--bp-text);
+  box-shadow:var(--bp-shadow-1);
+}
+.bp-input:focus{
+  border-color:rgba(0,95,222,.55);
+  box-shadow:0 0 0 4px rgba(0,95,222,.12), var(--bp-shadow-1);
+}
+
+/* Filter chips */
+.bp-chips{
+  margin-top:10px;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.bp-filter{
+  border:1px solid rgba(1,27,46,.10);
+  background:rgba(255,255,255,.65);
+  color:var(--bp-navy);
+  padding:10px 12px;
+  border-radius:999px;
+  font-weight:700;
+  font-size:12px;
+}
+.bp-filter.is-active{
+  background:rgba(0,95,222,.12);
+  border-color:rgba(0,95,222,.30);
+  color:var(--bp-navy);
+}
+.bp-filter:focus-visible{
+  outline:none;
+  box-shadow:0 0 0 4px rgba(0,95,222,.12);
+  border-color:rgba(0,95,222,.55);
+}
+
+/* Grid */
+.bp-grid{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+@media (max-width:640px){
+  .bp-grid{grid-template-columns:1fr}
+}
+
+/* Cards */
+.bp-card{
+  position:relative;
+  display:grid;
+  grid-template-columns:60px 1fr;
+  gap:12px;
+  align-items:center;
+  padding:12px 54px 12px 12px; /* ✅ reserve space for the star */
+  text-decoration:none;
+  border-radius:18px;
+  border:1px solid rgba(1,27,46,.10);
+  background:var(--bp-surface);
+  box-shadow:var(--bp-shadow-1);
+  transition:transform 160ms ease, box-shadow 220ms ease, border-color 180ms ease;
+  min-height:84px;
+  color:var(--bp-navy);
+}
+/* Optional: highlight favorited cards subtly */
+.bp-card.is-favorite{
+  border-color: rgba(0,95,222,.30);
+  box-shadow: 0 0 0 4px rgba(0,95,222,.08), var(--bp-shadow-1);
+}
+.bp-card:hover{
+  transform:translateY(-1px);
+  border-color:rgba(0,95,222,.18);
+  box-shadow:var(--bp-shadow-2);
+}
+.bp-card:active{transform:scale(.995)}
+.bp-card:focus-visible{
+  outline:none;
+  box-shadow:0 0 0 4px rgba(0,95,222,.14), var(--bp-shadow-2);
+  border-color:rgba(0,95,222,.55);
+}
+
+/* Icon */
+.bp-icon{
+  width:60px; height:60px;
+  border-radius:16px;
+  background:linear-gradient(135deg, rgba(1,27,46,.05), rgba(0,95,222,.10));
+  border:1px solid rgba(1,27,46,.10);
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+}
+.bp-icon__img{
+  width:60px; height:60px;
+  object-fit:cover;
+  border-radius:16px;
+  background:#fff;
+}
+
+/* Text */
+.bp-card__body{display:grid; gap:3px}
+.bp-card__kicker{
+  font-size:10.5px;
+  font-weight:650;
+  letter-spacing:.22px;
+  text-transform:uppercase;
+  color:rgba(0,95,222,.90);
+}
+.bp-card__title{
+  font-size:15px;
+  line-height:1.2;
+  font-weight:720;
+  color:var(--bp-navy);
+}
+.bp-card__meta{
+  font-size:12px;
+  line-height:1.2;
+  font-weight:600;
+  color:rgba(91,107,122,.92);
+}
+
+/* Pin */
+.bp-pin{
+  position:absolute;
+  right:10px;
+  top:10px;
+  width:34px;
+  height:34px;
+  border-radius:999px;
+  border:1px solid rgba(1,27,46,.10);
+  background:rgba(255,255,255,.70);
+  cursor:pointer;
+}
+.bp-pin::before{
+  content:"★";
+  display:block;
+  text-align:center;
+  line-height:32px;
+  font-size:14px;
+  color:rgba(1,27,46,.35);
+}
+.bp-pin.is-on{
+  border-color:rgba(0,95,222,.30);
+  background:rgba(0,95,222,.12);
+}
+.bp-pin.is-on::before{
+  color:rgba(0,95,222,.95);
+}
+.bp-pin:focus-visible{
+  outline:none;
+  box-shadow:0 0 0 4px rgba(0,95,222,.12);
+  border-color:rgba(0,95,222,.55);
+}
+.bp-pin { pointer-events: auto; }
+
+/* Empty state */
+.bp-empty{
+  display:none;
+  margin-top:14px;
+  padding:16px 14px;
+  border-radius:18px;
+  border:1px dashed rgba(1,27,46,.18);
+  background:rgba(255,255,255,.55);
+}
+.bp-empty__title{
+  font-weight:780;
+  color:var(--bp-navy);
+  margin-bottom:6px;
+}
+.bp-empty__text{
+  font-weight:600;
+  color:rgba(91,107,122,.95);
+}
+
+/* Footer */
+.bp-footer-note{
+  margin:16px 6px 0;
+  color:var(--bp-muted);
+  font-weight:600;
+  font-size:12px;
+}
+
+/* Legacy (safe) */
+.logo-container,.file-container,.file-item,.logo{display:block}
+
+/* ===== Bayshore: shared logo sizing (safe + backward compatible) ===== */
+.bp-topbar__logo,
+img.logo {
+  height: 34px;
+  width: auto;
+  max-width: 180px;
+  object-fit: contain;
+  display: block;
+}
+
+/* If a page uses a taller topbar, allow it to scale slightly on bigger screens */
+@media (min-width: 900px) {
+  .bp-topbar__logo,
+  img.logo {
+    height: 38px;
+    max-width: 220px;
+  }
+}

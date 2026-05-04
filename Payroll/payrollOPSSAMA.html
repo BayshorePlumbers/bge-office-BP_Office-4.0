@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<!-- Bayshore CSP (self-only) -->
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self';
+               img-src 'self' data:;
+               style-src 'self';
+               script-src 'self';
+               connect-src 'self'" />
+<!-- On-screen and print styles -->
+<link href="payrollstyle.css" rel="stylesheet" type="text/css"/>
+<link href="payrollprint.css" media="print" rel="stylesheet" type="text/css"/>
+<!-- Favicon -->
+<link href="favicon.ico" rel="icon" type="image/x-icon"/>
+<title>Operations Project Report - Bayshore Plumbers</title>
+</head>
+<body>
+<!-- Main Container -->
+<main class="container" role="main">
+
+  <header class="top-bar no-print">
+    <div class="header-left">
+      <img src="BP.png" alt="Bayshore Plumbers Logo" class="logo">
+    </div>
+    <div class="header-title">Operations Project Report</div>
+    <div class="header-right-spacer"></div>
+  </header>
+<section class="calculator">
+<form id="reportForm" autocomplete="off" novalidate>
+<!-- Job Details Table -->
+<table class="input-data">
+<tbody>
+
+<!-- Job Type Selector -->
+<tr>
+  <th>Job Type:</th>
+  <td colspan="3">
+    <div class="form-group form-group-jobtype">
+      <label class="subheading" for="jobType">Job Type</label>
+      <select id="jobType" name="jobType">
+        <option selected="" value="company">Company Job (Sam)</option>
+        <option value="office">Office Job (Ali, Karen)</option>
+        <option value="technician">Solis</option>
+        <option value="newtech">David/ Jose Sanabria/ Rafael</option>
+        <option value="hourlytech">Hourly Technician Job</option>
+      </select>
+
+      <!-- GNI (Company only) -->
+      <div id="gniContainer" class="is-hidden gni-container">
+        <label class="checkbox-row">
+          <input id="gni" type="checkbox"/>
+          <span>Is this a GNI job?</span>
+        </label>
+      </div>
+
+      <!-- S/W/G/CS (Technician + Sales only) -->
+      <div id="swgcsContainer" class="is-hidden swgcs-container">
+        <label class="swgcs-label">Is this a S/W/G/CS job?</label>
+        <div class="button-group button-group-left">
+          <button class="dynamic-button qa-btn" id="swgcsYes" type="button" aria-pressed="false">YES</button>
+          <button class="dynamic-button qa-btn" id="swgcsNo" type="button" aria-pressed="true">NO</button>
+        </div>
+        <input id="swgcs" name="swgcs" type="hidden" value="no"/>
+      </div>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <th>Job Address:</th>
+  <td>
+    <input id="ja" name="ja" placeholder="Enter job address here" type="text" autocomplete="off"/>
+  </td>
+  <th>Total Price:</th>
+  <td>
+    <!-- Money: text + inputmode for iPad numeric keyboard -->
+    <input id="tp" name="tp" placeholder="Enter final selling price" type="text" inputmode="decimal" autocomplete="off" value="$0.00"/>
+  </td>
+</tr>
+
+<tr>
+  <th class="th-with-tip">
+    Project Duration (hours):
+    <button type="button" class="tip-btn" data-tip="pd" aria-label="Project Duration help">i</button>
+  </th>
+  <td>
+    <!-- Hours: text + inputmode -->
+    <input id="pd" name="pd" placeholder="Enter project duration" type="text" inputmode="decimal" autocomplete="off" value="1.00 hrs"/>
+  </td>
+  <th>Material Expenses:</th>
+  <td>
+    <input id="material" name="material" placeholder="Enter material expenses" type="text" inputmode="decimal" autocomplete="off" value="$0.00"/>
+  </td>
+</tr>
+
+<tr>
+  <th>Other Expenses:</th>
+  <td>
+    <input id="oe" name="oe" placeholder="Enter other expenses" type="text" inputmode="decimal" autocomplete="off" value="$0.00"/>
+  </td>
+  <th>Date:</th>
+  <td>
+    <!-- Date: TEXT (HOURLY behavior) -->
+    <input
+      type="text"
+      id="date"
+      class="date-input bs-date"
+      inputmode="numeric"
+      placeholder="Enter date (any format)"
+      autocomplete="off"
+    >
+  </td>
+</tr>
+
+</tbody>
+</table>
+
+<div class="question-section question-cards" aria-label="Payment Questions">
+
+  <div id="question1" class="question-card">
+    <label>Payment Received?</label>
+    <div id="paymentReceivedContainer" class="payment-received-container">
+          <div class="button-group button-group-left">
+            <button class="dynamic-button qa-btn" id="payRecYes" type="button" aria-pressed="false">YES</button>
+            <button class="dynamic-button qa-btn" id="payRecNo" type="button" aria-pressed="true">NO</button>
+            <button class="dynamic-button qa-btn" id="payRecAccount" type="button" aria-pressed="false">BAYSHORE ACCOUNT</button>
+          </div>
+          <input id="paymentReceived" name="paymentReceived" type="hidden" value="no"/>
+    </div>
+  </div>
+
+  <div id="paymentMethodRow" class="question-card is-hidden">
+    <label>Payment Method</label>
+    <div id="paymentMethodContainer">
+          <div class="button-group button-group-left">
+            <button class="dynamic-button qa-btn" id="payMethodDebit" type="button" aria-pressed="false">DEBIT CARD</button>
+            <button class="dynamic-button qa-btn" id="payMethodCash" type="button" aria-pressed="false">CASH</button>
+            <button class="dynamic-button qa-btn" id="payMethodOnline" type="button" aria-pressed="false">ONLINE</button>
+            <button class="dynamic-button qa-btn" id="payMethodCard" type="button" aria-pressed="false">CREDIT CARD</button>
+            <button class="dynamic-button qa-btn" id="payMethodCheck" type="button" aria-pressed="false">CHECK</button>
+          </div>
+          <input id="paymentMethod" name="paymentMethod" type="hidden" value=""/>
+    </div>
+  </div>
+
+  <div id="cashAmountRow" class="question-card is-hidden">
+    <label for="cashAmount">Cash Amount</label>
+    <input id="cashAmount" name="cashAmount" placeholder="Enter cash amount received" type="text" inputmode="decimal" autocomplete="off" value="$0.00"/>
+  </div>
+
+  <div id="checkNumberRow" class="question-card is-hidden">
+    <label for="checkNumber">Check Number</label>
+    <input id="checkNumber" name="checkNumber" placeholder="Enter check number" type="text" autocomplete="off"/>
+  </div>
+
+  <div id="cardFeeRow" class="question-card is-hidden">
+    <label>Card Fee Added?</label>
+    <div id="cardFeeContainer">
+          <div class="button-group button-group-left">
+            <button class="dynamic-button qa-btn" id="cardFeeYes" type="button" aria-pressed="true">YES</button>
+            <button class="dynamic-button qa-btn" id="cardFeeNo" type="button" aria-pressed="false">NO</button>
+          </div>
+          <input id="cardFeeAdded" name="cardFeeAdded" type="hidden" value="yes"/>
+    </div>
+  </div>
+</div>
+
+<datalist id="laborList">
+  <option value="Jose Sierra"></option>
+  <option value="Edvin Garcia"></option>
+  <option value="Eduardo Garcia"></option>
+  <option value="Anderson Chitte"></option>
+  <option value="Victor Alanis"></option>
+  <option value="Giovanni Solis"></option>
+  <option value="Freddie Garcia"></option>
+  <option value="Ivan Contreras"></option>
+  <option value="Ezequiel Garibay"></option>
+  <option value="Antonio Mendoza"></option>
+  <option value="Celso Colindres"></option>
+  <option value="Ader Carpio"></option>
+</datalist>
+
+<!-- Labor Details Table -->
+<table class="input-data input-data--labor">
+<thead>
+<tr>
+<th colspan="4">Labor Details</th>
+</tr>
+</thead>
+<tbody>
+
+<tr>
+  <th>Day 1 (Hours):</th>
+  <td><input id="day1" name="day1" type="text" inputmode="decimal" autocomplete="off" value="0.00 hrs"/></td>
+  <th>Day 1 (Labor Names):</th>
+  <td>
+    <div class="labor-multi" data-day="1">
+      <div class="labor-add-row">
+        <input id="day1NameInput" type="text" list="laborList" placeholder="Select or type a name" autocomplete="off"/>
+        <input id="day1NoteInput" type="text" placeholder="Notes (optional) e.g., left early / 2 hrs" autocomplete="off"/>
+        <button type="button" class="dynamic-button labor-add-btn" data-day="1">ADD</button>
+      </div>
+      <div id="day1LaborList" class="labor-list"></div>
+      <input id="day1Names" name="day1Names" type="hidden" value=""/>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <th>Day 2 (Hours):</th>
+  <td><input id="day2" name="day2" type="text" inputmode="decimal" autocomplete="off" value="0.00 hrs"/></td>
+  <th>Day 2 (Labor Names):</th>
+  <td>
+    <div class="labor-multi" data-day="2">
+      <div class="labor-add-row">
+        <input id="day2NameInput" type="text" list="laborList" placeholder="Select or type a name" autocomplete="off"/>
+        <input id="day2NoteInput" type="text" placeholder="Notes (optional) e.g., left early / 2 hrs" autocomplete="off"/>
+        <button type="button" class="dynamic-button labor-add-btn" data-day="2">ADD</button>
+      </div>
+      <div id="day2LaborList" class="labor-list"></div>
+      <input id="day2Names" name="day2Names" type="hidden" value=""/>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <th>Day 3 (Hours):</th>
+  <td><input id="day3" name="day3" type="text" inputmode="decimal" autocomplete="off" value="0.00 hrs"/></td>
+  <th>Day 3 (Labor Names):</th>
+  <td>
+    <div class="labor-multi" data-day="3">
+      <div class="labor-add-row">
+        <input id="day3NameInput" type="text" list="laborList" placeholder="Select or type a name" autocomplete="off"/>
+        <input id="day3NoteInput" type="text" placeholder="Notes (optional) e.g., left early / 2 hrs" autocomplete="off"/>
+        <button type="button" class="dynamic-button labor-add-btn" data-day="3">ADD</button>
+      </div>
+      <div id="day3LaborList" class="labor-list"></div>
+      <input id="day3Names" name="day3Names" type="hidden" value=""/>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <th>Day 4 (Hours):</th>
+  <td><input id="day4" name="day4" type="text" inputmode="decimal" autocomplete="off" value="0.00 hrs"/></td>
+  <th>Day 4 (Labor Names):</th>
+  <td>
+    <div class="labor-multi" data-day="4">
+      <div class="labor-add-row">
+        <input id="day4NameInput" type="text" list="laborList" placeholder="Select or type a name" autocomplete="off"/>
+        <input id="day4NoteInput" type="text" placeholder="Notes (optional) e.g., left early / 2 hrs" autocomplete="off"/>
+        <button type="button" class="dynamic-button labor-add-btn" data-day="4">ADD</button>
+      </div>
+      <div id="day4LaborList" class="labor-list"></div>
+      <input id="day4Names" name="day4Names" type="hidden" value=""/>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <th>Day 5 (Hours):</th>
+  <td><input id="day5" name="day5" type="text" inputmode="decimal" autocomplete="off" value="0.00 hrs"/></td>
+  <th>Day 5 (Labor Names):</th>
+  <td>
+    <div class="labor-multi" data-day="5">
+      <div class="labor-add-row">
+        <input id="day5NameInput" type="text" list="laborList" placeholder="Select or type a name" autocomplete="off"/>
+        <input id="day5NoteInput" type="text" placeholder="Notes (optional) e.g., left early / 2 hrs" autocomplete="off"/>
+        <button type="button" class="dynamic-button labor-add-btn" data-day="5">ADD</button>
+      </div>
+      <div id="day5LaborList" class="labor-list"></div>
+      <input id="day5Names" name="day5Names" type="hidden" value=""/>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <th>Additional Hours:</th>
+  <td><input id="ah" name="ah" type="text" inputmode="decimal" autocomplete="off" value="0.00 hrs"/></td>
+
+  <th>Additional (Labor / Notes):</th>
+  <td>
+    <div class="labor-multi" data-day="ah">
+      <div class="labor-add-row">
+        <input id="ahNameInput" type="text" list="laborList" placeholder="Select or type a name" autocomplete="off"/>
+        <input id="ahNoteInput" type="text" placeholder="Notes (optional) e.g., 2 hrs OT / came late" autocomplete="off"/>
+        <button type="button" class="dynamic-button labor-add-btn" data-day="ah">ADD</button>
+      </div>
+
+      <div id="ahLaborList" class="labor-list"></div>
+
+      <input id="ahNames" name="ahNames" type="hidden" value=""/>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <th>Overtime Hours:</th>
+  <td><input id="toh" name="toh" type="text" inputmode="decimal" autocomplete="off" value="0.00 hrs"/></td>
+  <th class="th-with-tip">
+    Total Hours:
+    <button type="button" class="tip-btn" data-tip="labor" aria-label="Labor hours help">i</button>
+  </th>
+  <td><input id="totalHours" name="totalHours" readonly="" type="text" value="0.00 hrs"/></td>
+</tr>
+
+</tbody>
+</table>
+
+<!-- Job Description Table -->
+<table class="input-data">
+<tbody>
+<tr>
+<th colspan="2">Job Description</th>
+</tr>
+<tr>
+<td colspan="2">
+<textarea id="notes" name="notes" placeholder="Enter job description/notes here" rows="4"></textarea>
+</td>
+</tr>
+</tbody>
+</table>
+
+<!-- For Office Use Only Table -->
+<table class="input-data input-data--primary">
+<thead>
+<tr>
+<th colspan="4">For Office Use Only</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>SW21/RP21:</th>
+<td><input id="sw" name="sw" readonly="" type="text"/></td>
+<th>WH32:</th>
+<td><input id="wh" name="wh" readonly="" type="text"/></td>
+</tr>
+<tr>
+<th>RD15/UL15:</th>
+<td><input id="rd" name="rd" readonly="" type="text"/></td>
+<th>BPP%:</th>
+<td><input id="bpp" name="bpp" readonly="" type="text"/></td>
+</tr>
+</tbody>
+</table>
+
+<!-- Output Group -->
+<div class="output-group">
+  <!-- "Kicker" in same bar style as "Total Commission" -->
+  <div class="commission-display">Kicker: <span id="kicker">$0.00</span></div>
+
+  <div class="job-status is-hidden" id="jobStatus">
+    <div class="job-status-title" id="jobStatusTitle"></div>
+    <div class="job-status-detail" id="jobStatusDetail"></div>
+  </div>
+
+  <input id="enteredTotalPrice" type="hidden" value=""/>
+  <input id="updatedTotalPrice" type="hidden" value=""/>
+  <input id="commissionAmount" type="hidden" value=""/>
+  <input id="totalCommission" type="hidden" value=""/>
+  <input id="profitBeforeKicker" type="hidden" value=""/>
+  <input id="profitAfterKicker" type="hidden" value=""/>
+</div>
+
+<!-- Buttons -->
+<div class="button-group action-bar action-bar--main no-print">
+  <button id="calculateBtn" type="button" class="action-bar__btn">Generate Report</button>
+  <button id="printButton" type="button" class="action-bar__btn action-bar__btn--primary">Print</button>
+</div>
+
+</form>
+</section>
+<!-- Print Sheet (Gold Standard: same-tab print) -->
+<section id="printSheet" class="is-hidden" aria-hidden="true"></section>
+</main>
+
+<!-- Scripts -->
+<script src="payrollOPSSAMA.js"></script>
+
+</body>
+</html>

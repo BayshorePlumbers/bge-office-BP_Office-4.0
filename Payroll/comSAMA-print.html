@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self';
+                 img-src 'self' data:;
+                 style-src 'self';
+                 script-src 'self';
+                 connect-src 'self'" />
+  <title>Technician Commission Print - Bayshore Plumbers</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+  <link rel="stylesheet" href="payrollstyle.css" type="text/css">
+  <link rel="stylesheet" href="payrollprint.css" type="text/css" media="print">
+</head>
+
+<body class="print-page">
+  <main class="container" role="main">
+    <div class="print-page-status no-print" id="printPageStatus" role="status" aria-live="polite"></div>
+
+    <section class="print-page-toolbar no-print" aria-label="Print actions">
+      <div class="print-page-toolbar__top">
+        <div class="print-page-toolbar__title-wrap">
+          <h1 class="print-page-toolbar__title">Print Preview Ready</h1>
+          <p class="print-page-toolbar__subtitle" id="printPageSubtitle">
+            Review the document below, then open the print preview.
+          </p>
+        </div>
+      </div>
+
+      <div class="print-page-toolbar__actions button-group" id="printPageActions">
+        <button type="button" id="printNowButton" class="btn-primary" aria-label="Open Print Preview">
+          Open Print Preview
+        </button>
+        <button type="button" id="backToCalculatorButton" class="btn-print" aria-label="Back to Calculator">
+          Back to Calculator
+        </button>
+      </div>
+
+      <div class="print-page-note" id="printHelpMessage" role="status" aria-live="polite">
+        Tap <strong>Open Print Preview</strong>. If your iPad does not open the printer window, use the browser’s <strong>Share → Print</strong> option.
+      </div>
+    </section>
+
+    <section id="printSheet" class="print-force-show" aria-hidden="false">
+      <div id="printRoot"></div>
+    </section>
+  </main>
+
+  <script src="comSAMA-print.js"></script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <meta http-equiv="Content-Security-Policy"
+      content="default-src 'self';
+               img-src 'self' data: https:;
+               style-src 'self';
+               script-src 'self';
+               connect-src 'self' https:;
+               base-uri 'self';
+               form-action 'self';" />
+
+  <title>Bayshore Tools</title>
+  <meta name="theme-color" content="#011B2E" />
+
+  <link rel="stylesheet" href="assets/css/bp-core.css" type="text/css" />
+  <link rel="stylesheet" href="assets/css/bp-print.css" media="print" type="text/css" />
+
+  <!-- Load shared helpers ONCE -->
+  <script src="assets/js/bp-ui.js" defer></script>
+  <script src="index.js" defer></script>
+</head>
+
+<body class="bp-ready">
+  <header class="bp-topbar" role="banner">
+    <div class="bp-topbar__left">
+      <img src="assets/img/BP.png" alt="Bayshore Plumbers" class="bp-topbar__logo" />
+      <div class="bp-topbar__titles">
+        <div class="bp-topbar__title">Bayshore Tools</div>
+        <div class="bp-topbar__subtitle">Manager's dashboard launcher</div>
+      </div>
+    </div>
+
+    <div class="bp-topbar__right" aria-label="Status">
+      <div class="bp-chip" id="bpDateChip">Today</div>
+    </div>
+  </header>
+
+  <main class="bp-page" role="main">
+
+    <!-- Trust strip -->
+    <section class="bp-trust" aria-label="Trust and quick contact">
+        <div class="bp-trust__left">
+            <div class="bp-trust__pill">Licensed &amp; Insured</div>
+            <div class="bp-trust__pill">Trusted team</div>
+        </div>
+        <div class="bp-trust__right">
+            <a class="bp-trust__link" href="https://bayshoreplumbers.com/" target="_blank" rel="noopener">Website</a>
+
+            <a class="bp-trust__link" href="https://bayshoreplumbers.com/info" target="_blank" rel="noopener">Info</a>
+
+            <a class="bp-trust__link" href="https://bayshoreplumbers.com/platinum-membership/" target="_blank" rel="noopener">Membership</a>
+
+            <a class="bp-trust__link" href="https://bayshoreplumbers.com/promotions/" target="_blank" rel="noopener">Promotions</a>
+
+            <a class="bp-trust__link bp-trust__link--strong" href="tel:+16503236464">Call Office</a>
+        </div>
+    </section>
+
+    <!-- Top actions row (2 only) -->
+    <section class="bp-actions bp-actions--two" aria-label="Top actions">
+      <a class="bp-action bp-action--primary" href="Payroll/prindex.html">
+        <span class="bp-action__kicker">Top Action</span>
+        <span class="bp-action__title">Payroll</span>
+        <span class="bp-action__meta">Commissions &amp; payouts</span>
+      </a>
+
+      <a class="bp-action" href="Calculators/bidcalindex.html">
+        <span class="bp-action__kicker">Top Action</span>
+        <span class="bp-action__title">Project Estimate</span>
+        <span class="bp-action__meta">Bids &amp; totals</span>
+      </a>
+    </section>
+
+    <section class="bp-hero" aria-label="Search and filters">
+      <div class="bp-hero__row">
+        <h1 class="bp-hero__headline">Choose a tool</h1>
+        <button class="bp-ghost" type="button" id="bpClearBtn" aria-label="Clear search and filters">Clear</button>
+      </div>
+
+      <div class="bp-search">
+        <input
+          id="bpSearchInput"
+          class="bp-input"
+          type="search"
+          inputmode="search"
+          autocomplete="off"
+          placeholder="Search: payroll, bid, docs, sales…"
+          aria-label="Search tools"
+        />
+      </div>
+
+      <div class="bp-chips" role="tablist" aria-label="Category filters">
+        <button class="bp-filter is-active" type="button" data-filter="all" role="tab" aria-selected="true">All</button>
+        <button class="bp-filter" type="button" data-filter="favorites" role="tab" aria-selected="false">★ Favorites</button>
+        <button class="bp-filter" type="button" data-filter="calculators" role="tab" aria-selected="false">Calculators</button>
+        <button class="bp-filter" type="button" data-filter="payroll" role="tab" aria-selected="false">Payroll</button>
+        <button class="bp-filter" type="button" data-filter="ai" role="tab" aria-selected="false">AI</button>
+        <button class="bp-filter" type="button" data-filter="ops" role="tab" aria-selected="false">Ops</button>
+        <button class="bp-filter" type="button" data-filter="docs" role="tab" aria-selected="false">Docs</button>
+        <button class="bp-filter" type="button" data-filter="sales" role="tab" aria-selected="false">Sales</button>
+        <button class="bp-filter" type="button" data-filter="workflows" role="tab" aria-selected="false">Workflows</button>
+        <button class="bp-filter" type="button" data-filter="hr" role="tab" aria-selected="false">HR</button>
+      </div>
+    </section>
+
+    <!-- Keep your existing cards here -->
+    <section class="bp-grid" aria-label="Tools" id="bpGrid">
+      <a class="bp-card" data-id="bid" data-cat="calculators" href="Calculators/bidcalindex.html" data-keywords="bid estimate project calculator">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="assets/img/thumbnails/bid cal.png" alt="" class="bp-icon__img" data-bp-fallback="assets/img/thumbnails/BP.png"
+               loading="eager" fetchpriority="high" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Calculators</div>
+          <div class="bp-card__title">Project Estimate</div>
+          <div class="bp-card__meta">Bids, pricing, totals</div>
+        </div>
+        <button class="bp-pin" type="button" aria-label="Pin to favorites" title="Pin"></button>
+      </a>
+
+      <a class="bp-card" data-id="payroll" data-cat="payroll" href="Payroll/prindex.html" data-keywords="payroll commission technician office calculator">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="assets/img/thumbnails/pay cal.png" alt="" class="bp-icon__img" data-bp-fallback="assets/img/thumbnails/BP.png"
+               loading="eager" fetchpriority="high" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Payroll</div>
+          <div class="bp-card__title">Payroll Calculators</div>
+          <div class="bp-card__meta">Commissions &amp; profit</div>
+        </div>
+        <button class="bp-pin" type="button" aria-label="Pin to favorites" title="Pin"></button>
+      </a>
+
+      <a class="bp-card" data-id="review" data-cat="ai" href="https://bp-review-assist-aefb51dbe73f.herokuapp.com" data-keywords="review assistant google yelp response ai">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="assets/img/thumbnails/reviewgen.png" alt="" class="bp-icon__img" data-bp-fallback="assets/img/thumbnails/BP.png"
+               loading="lazy" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">AI</div>
+          <div class="bp-card__title">Review Assistant</div>
+          <div class="bp-card__meta">Fast replies</div>
+        </div>
+        <button class="bp-pin" type="button" aria-label="Pin to favorites" title="Pin"></button>
+      </a>
+
+      <a class="bp-card" data-id="summary" data-cat="ai" href="https://summary-assistant-4fed84c9136d.herokuapp.com" data-keywords="summary assistant notes recap ai">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="assets/img/thumbnails/reviewgen.png" alt="" class="bp-icon__img" data-bp-fallback="assets/img/thumbnails/BP.png"
+               loading="lazy" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">AI</div>
+          <div class="bp-card__title">Summary Assistant</div>
+          <div class="bp-card__meta">Clean recaps</div>
+        </div>
+        <button class="bp-pin" type="button" aria-label="Pin to favorites" title="Pin"></button>
+      </a>
+
+      <a class="bp-card" data-id="docs" data-cat="docs" href="Bayshore Docs/bpdocs.html" data-keywords="docs documents forms policies">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="assets/img/thumbnails/document.png" alt="" class="bp-icon__img" data-bp-fallback="assets/img/thumbnails/BP.png"
+               loading="lazy" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Docs</div>
+          <div class="bp-card__title">Bayshore Docs</div>
+          <div class="bp-card__meta">Forms &amp; references</div>
+        </div>
+        <button class="bp-pin" type="button" aria-label="Pin to favorites" title="Pin"></button>
+      </a>
+
+      <a class="bp-card" data-id="sales" data-cat="sales" href="Sales/salestools.html" data-keywords="sales tools scripts followup">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="assets/img/thumbnails/sales tools.png" alt="" class="bp-icon__img" data-bp-fallback="assets/img/thumbnails/BP.png"
+               loading="lazy" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Sales</div>
+          <div class="bp-card__title">Sales Tools</div>
+          <div class="bp-card__meta">Scripts &amp; helpers</div>
+        </div>
+        <button class="bp-pin" type="button" aria-label="Pin to favorites" title="Pin"></button>
+      </a>
+
+      <a class="bp-card" data-id="pem" data-cat="docs" href="Plumbing Educational Material/pemindex.html" data-keywords="plumbing educational material pdf training topics">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="assets/img/thumbnails/document.png" alt="" class="bp-icon__img" data-bp-fallback="assets/img/thumbnails/BP.png"
+               loading="lazy" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Docs</div>
+          <div class="bp-card__title">Plumbing Educational Material</div>
+          <div class="bp-card__meta">42 PDFs &amp; references</div>
+        </div>
+        <button class="bp-pin" type="button" aria-label="Pin to favorites" title="Pin"></button>
+      </a>
+
+      <a class="bp-card" data-id="welcome" data-cat="hr" href="Welcome Package/welcome.html" data-keywords="welcome onboarding new hires hr">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="assets/img/thumbnails/welcome.png" alt="" class="bp-icon__img" data-bp-fallback="assets/img/thumbnails/BP.png"
+               loading="lazy" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">HR</div>
+          <div class="bp-card__title">New Hire Welcome</div>
+          <div class="bp-card__meta">Onboarding</div>
+        </div>
+        <button class="bp-pin" type="button" aria-label="Pin to favorites" title="Pin"></button>
+      </a>
+
+      <a class="bp-card" data-id="mep" data-cat="ops" href="Expense Sheet/pes.html" data-keywords="mep cart materials equipment permits operations">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="assets/img/thumbnails/expense.png" alt="" class="bp-icon__img" data-bp-fallback="assets/img/thumbnails/BP.png"
+               loading="lazy" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Ops</div>
+          <div class="bp-card__title">M.E.P. Cart</div>
+          <div class="bp-card__meta">Parts &amp; permits</div>
+        </div>
+        <button class="bp-pin" type="button" aria-label="Pin to favorites" title="Pin"></button>
+      </a>
+
+      <a class="bp-card" data-id="workflows" data-cat="workflows" href="Workflows/wf.html" data-keywords="workflow process checklist">
+        <div class="bp-icon" aria-hidden="true">
+          <img src="assets/img/thumbnails/workflows.png" alt="" class="bp-icon__img" data-bp-fallback="assets/img/thumbnails/BP.png"
+               loading="lazy" decoding="async" width="128" height="128" />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Workflows</div>
+          <div class="bp-card__title">Workflows</div>
+          <div class="bp-card__meta">Step-by-step</div>
+        </div>
+        <button class="bp-pin" type="button" aria-label="Pin to favorites" title="Pin"></button>
+      </a>
+    </section>
+
+    <section class="bp-empty" id="bpEmptyState" aria-live="polite">
+      <div class="bp-empty__title">No tools found</div>
+      <div class="bp-empty__text">Try a different search or tap <strong>Clear</strong>.</div>
+    </section>
+
+    <p class="bp-footer-note">Pro tip: Add to iPad Home Screen for one-tap access.</p>
+  </main>
+</body>
+</html>

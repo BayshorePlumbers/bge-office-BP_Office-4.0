@@ -1,0 +1,442 @@
+/* /assets/css/bp-calculator.css */
+/* SAM 3.0 — Shared Calculator UI (Screen) */
+/* Backward-compatible with legacy calculator markup. */
+/* Design intent: Bayshore-clean, index.html-adjacent, iPad-first. */
+
+:root{
+  --bp-calc-max: 980px;
+  --bp-calc-pad: 20px;
+
+  --bp-calc-card: #ffffff;
+  --bp-calc-bg: #F7F9FC;
+
+  --bp-calc-text: #0B1220;
+  --bp-calc-muted: rgba(11, 18, 32, 0.65);
+
+  --bp-calc-border: rgba(17, 24, 39, 0.12);
+  --bp-calc-shadow: 0 10px 24px rgba(0,0,0,0.08);
+
+  --bp-calc-radius: 14px;
+  --bp-calc-radius-sm: 10px;
+
+  --bp-calc-brand: #011B2E;
+  --bp-calc-brand-2: #002358;
+  --bp-calc-accent: #005FDE;
+  --bp-calc-danger: #AA001D;
+
+  --bp-calc-focus: 0 0 0 3px rgba(0, 95, 222, 0.25);
+
+  --bp-calc-field-h: 48px;
+  --bp-calc-gap: 14px;
+}
+
+/* Page background (scoped; does NOT fight bp-core typography) */
+body.bp-ready{
+  background: var(--bp-calc-bg);
+  color: var(--bp-calc-text);
+}
+
+/* === Layout wrapper used by legacy calculators === */
+.container{
+  max-width: var(--bp-calc-max);
+  margin: 0 auto;
+  padding: var(--bp-calc-pad);
+}
+
+/* === Header (legacy calculators that use <header>) === */
+header{
+  max-width: var(--bp-calc-max);
+  margin: 0 auto;
+  padding: 18px var(--bp-calc-pad) 10px;
+  text-align: center;
+}
+
+.logo-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 0 10px;
+}
+
+.logo{
+  width: 96px;
+  height: auto;
+  display: block;
+}
+
+header h1{
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--bp-calc-brand);
+  letter-spacing: 0.2px;
+}
+
+/* If the page includes hr.header-separator, keep it subtle */
+.header-separator{
+  border: none;
+  height: 1px;
+  background: var(--bp-calc-border);
+  margin: 14px auto 0;
+  max-width: 760px;
+}
+
+/* === Form container === */
+form{
+  background: var(--bp-calc-card);
+  border: 1px solid var(--bp-calc-border);
+  border-radius: var(--bp-calc-radius);
+  box-shadow: var(--bp-calc-shadow);
+  padding: 18px;
+}
+
+/* Sections */
+.form-section{
+  padding: 16px 0;
+  border-bottom: 1px solid var(--bp-calc-border);
+}
+
+.form-section:first-child{
+  padding-top: 6px;
+}
+
+.form-section:last-child{
+  border-bottom: none;
+  padding-bottom: 6px;
+}
+
+/* === Field grid (iPad-first) === */
+.form-group{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.form-group:last-child{
+  margin-bottom: 0;
+}
+
+.form-group label{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: var(--bp-calc-brand);
+}
+
+/* Inputs */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select,
+textarea{
+  width: 100%;
+  min-height: var(--bp-calc-field-h);
+  padding: 10px 12px;
+  border: 1px solid rgba(17, 24, 39, 0.18);
+  border-radius: var(--bp-calc-radius-sm);
+  background: #fff;
+  color: var(--bp-calc-text);
+  font-size: 1rem;
+  line-height: 1.2;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+}
+
+textarea{
+  min-height: 110px;
+  resize: vertical;
+}
+
+/* Focus */
+input:focus,
+select:focus,
+textarea:focus{
+  outline: none;
+  border-color: rgba(0, 95, 222, 0.55);
+  box-shadow: var(--bp-calc-focus);
+}
+
+/* Disabled */
+input:disabled,
+select:disabled,
+textarea:disabled{
+  background: rgba(17, 24, 39, 0.04);
+  color: rgba(11, 18, 32, 0.55);
+}
+
+/* Placeholder */
+::placeholder{
+  color: rgba(11, 18, 32, 0.45);
+}
+
+/* === Checkbox groups (many legacy calculators use .checkbox-group) === */
+.checkbox-group{
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.checkbox-group input[type="checkbox"]{
+  width: 22px;
+  height: 22px;
+  accent-color: var(--bp-calc-accent);
+}
+
+/* === Standard multi-checkbox lists (SAM 3.0) === */
+/* Use for Machinery/Permits blocks, etc. */
+.bp-checklist{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(17, 24, 39, 0.18);
+  border-radius: var(--bp-calc-radius-sm);
+  background: #fff;
+}
+
+.bp-checklist > label{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 8px 8px;
+  border-radius: 10px;
+  color: var(--bp-calc-text);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.bp-checklist > label:hover{
+  background: rgba(0, 95, 222, 0.06);
+}
+
+.bp-checklist input[type="checkbox"]{
+  width: 22px;
+  height: 22px;
+  accent-color: var(--bp-calc-accent);
+}
+
+.bp-checklist input[type="checkbox"]:focus{
+  outline: none;
+  box-shadow: var(--bp-calc-focus);
+}
+
+/* === Buttons === */
+.buttons-section{
+  padding-top: 12px;
+}
+
+.button-group{
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+button{
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 12px 16px;
+  min-height: 46px;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: transform 0.05s ease, box-shadow 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+
+button:active{
+  transform: translateY(1px);
+}
+
+button#calculateBtn,
+button[type="submit"],
+button:not([id]){
+  background: var(--bp-calc-brand);
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(1, 27, 46, 0.20);
+}
+
+button#calculateBtn:hover,
+button[type="submit"]:hover,
+button:not([id]):hover{
+  background: var(--bp-calc-brand-2);
+}
+
+button#printBtn{
+  background: #fff;
+  color: var(--bp-calc-brand);
+  border-color: rgba(1, 27, 46, 0.35);
+}
+
+button#printBtn:hover{
+  border-color: rgba(1, 27, 46, 0.65);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+}
+
+/* === Output section === */
+.output-section{
+  background: rgba(0, 95, 222, 0.06);
+  border: 1px solid rgba(0, 95, 222, 0.14);
+  border-radius: var(--bp-calc-radius);
+  padding: 16px;
+}
+
+.output-group{
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px dashed rgba(17, 24, 39, 0.18);
+}
+
+.output-group:last-child{
+  border-bottom: none;
+}
+
+.output-group label{
+  font-weight: 800;
+  color: var(--bp-calc-brand);
+}
+
+.output-group span{
+  font-weight: 900;
+  color: var(--bp-calc-text);
+}
+
+#finalPrice{
+  font-size: 1.25rem;
+  color: var(--bp-calc-brand);
+}
+
+#breakdown{
+  margin: 10px 0 6px;
+  color: var(--bp-calc-muted);
+  font-size: 0.98rem;
+  line-height: 1.4;
+}
+
+/* === Legacy print-table helpers shown on screen sometimes === */
+table.input-data{
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  border: 1px solid var(--bp-calc-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+table.input-data th,
+table.input-data td{
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--bp-calc-border);
+  font-size: 0.95rem;
+}
+
+table.input-data thead th{
+  background: rgba(1, 27, 46, 0.06);
+  color: var(--bp-calc-brand);
+  font-weight: 800;
+}
+
+table.input-data tr:last-child td{
+  border-bottom: none;
+}
+
+/* === Info Popover + Icon === */
+.info-popover{
+  position: absolute;
+  z-index: 1000;
+  background: #fff;
+  color: var(--bp-calc-text);
+  border: 1px solid rgba(17, 24, 39, 0.18);
+  padding: 10px 12px;
+  border-radius: 12px;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.18);
+  display: none;
+  max-width: 320px;
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.info-icon{
+  cursor: pointer;
+  user-select: none;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 95, 222, 0.35);
+  background: rgba(0, 95, 222, 0.08);
+  color: var(--bp-calc-accent);
+  font-weight: 900;
+  font-size: 0.85rem;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
+}
+
+.info-icon:hover{
+  background: rgba(0, 95, 222, 0.14);
+  border-color: rgba(0, 95, 222, 0.55);
+}
+
+.info-icon:active{
+  transform: translateY(1px);
+}
+
+.info-icon:focus{
+  outline: none;
+  box-shadow: var(--bp-calc-focus);
+}
+
+/* === Responsive upgrades === */
+@media (min-width: 760px){
+  form{
+    padding: 22px;
+  }
+
+  .form-section{
+    padding: 18px 0;
+  }
+
+  /* Two-column form layout on larger screens/iPad landscape */
+  .form-section{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 18px;
+    row-gap: 12px;
+  }
+
+  /* Output and button sections should remain full width */
+  .output-section,
+  .buttons-section{
+    display: block;
+  }
+
+  /* Ensure each group keeps label+field pairing */
+  .form-group{
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 480px){
+  .container{
+    padding: 14px;
+  }
+
+  form{
+    padding: 16px;
+  }
+
+  header{
+    padding: 16px 14px 8px;
+  }
+
+  .logo{
+    width: 88px;
+  }
+}

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <meta http-equiv="Content-Security-Policy"
+      content="default-src 'self';
+               img-src 'self' data: https:;
+               style-src 'self';
+               script-src 'self';
+               connect-src 'self' https:;
+               base-uri 'self';
+               form-action 'self';" />
+
+  <title>Project Operational Expense – Bayshore Tools</title>
+  <meta name="theme-color" content="#011B2E" />
+
+  <!-- EXACT SAME CSS AS index.html -->
+  <link rel="stylesheet" href="../assets/css/bp-core.css" type="text/css" />
+  <link rel="stylesheet" href="../assets/css/bp-print.css" media="print" type="text/css" />
+
+  <!-- Shared helpers -->
+  <script src="../assets/js/bp-ui.js" defer></script>
+</head>
+
+<body class="bp-ready">
+
+  <!-- ===== TOP BAR (IDENTICAL STRUCTURE) ===== -->
+  <header class="bp-topbar" role="banner">
+    <div class="bp-topbar__left">
+      <img src="../assets/img/BP.png" alt="Bayshore Plumbers" class="bp-topbar__logo" />
+      <div class="bp-topbar__titles">
+        <div class="bp-topbar__title">Bayshore Tools</div>
+        <div class="bp-topbar__subtitle">Project Operational Expense</div>
+      </div>
+    </div>
+
+    <div class="bp-topbar__right">
+      <a class="bp-chip" href="../index.html">Dashboard</a>
+    </div>
+  </header>
+
+  <main class="bp-page" role="main">
+
+    <!-- ===== PAGE HEADER ===== -->
+    <section class="bp-hero" aria-label="PES intro">
+      <div class="bp-hero__row">
+        <h1 class="bp-hero__headline">Project Operational Expense</h1>
+      </div>
+      <p class="bp-lead">
+        Select each module below to enter your project expenses.
+      </p>
+    </section>
+
+    <!-- ===== GRID (SAME GRID + CARD SYSTEM) ===== -->
+    <section class="bp-grid" aria-label="Operational Expense Modules">
+
+      <!-- MATERIALS -->
+      <a class="bp-card" data-id="pes-materials" data-cat="ops" href="matlist.html">
+        <div class="bp-icon" aria-hidden="true">
+          <img
+            src="../assets/img/thumbnails/matpic.jpg"
+            alt=""
+            class="bp-icon__img"
+            data-bp-fallback="../assets/img/thumbnails/BP.png"
+            loading="eager"
+            decoding="async"
+            width="128"
+            height="128"
+          />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">OPS</div>
+          <div class="bp-card__title">Material Expenses</div>
+          <div class="bp-card__meta">Project materials & supplies</div>
+        </div>
+      </a>
+
+      <!-- EQUIPMENT -->
+      <a class="bp-card" data-id="pes-equipment" data-cat="ops" href="equipment.html">
+        <div class="bp-icon" aria-hidden="true">
+          <img
+            src="../assets/img/thumbnails/equipic.jpg"
+            alt=""
+            class="bp-icon__img"
+            data-bp-fallback="../assets/img/thumbnails/BP.png"
+            loading="eager"
+            decoding="async"
+            width="128"
+            height="128"
+          />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">OPS</div>
+          <div class="bp-card__title">Equipment Expenses</div>
+          <div class="bp-card__meta">Rentals & heavy equipment</div>
+        </div>
+      </a>
+
+      <!-- PERMITS -->
+      <a class="bp-card" data-id="pes-permits" data-cat="ops" href="permits.html">
+        <div class="bp-icon" aria-hidden="true">
+          <img
+            src="../assets/img/thumbnails/perpic.jpg"
+            alt=""
+            class="bp-icon__img"
+            data-bp-fallback="../assets/img/thumbnails/BP.png"
+            loading="eager"
+            decoding="async"
+            width="128"
+            height="128"
+          />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">OPS</div>
+          <div class="bp-card__title">Permits Expenses</div>
+          <div class="bp-card__meta">City & regulatory permits</div>
+        </div>
+      </a>
+
+    </section>
+
+    <p class="bp-footer-note">
+      Tip: Complete modules in order for the most accurate project cost.
+    </p>
+
+  </main>
+</body>
+</html>

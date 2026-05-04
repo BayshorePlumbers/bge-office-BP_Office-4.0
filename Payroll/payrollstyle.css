@@ -1,0 +1,732 @@
+/* =========================================================
+   payrollstyle.css  — Bayshore Standard (SCREEN)
+   Rewritten/optimized WITHOUT changing behavior
+   Fixes invalid top-level declarations + removes duplicates
+   ========================================================= */
+
+   /* ===== Bayshore Standard Fonts (self-hosted) ===== */
+  @font-face{
+    font-family: "Inter";
+    src: url("fonts/Inter-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face{
+    font-family: "Inter";
+    src: url("fonts/Inter-SemiBold.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face{
+    font-family: "Inter";
+    src: url("fonts/Inter-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face{
+    font-family: "Inter";
+    src: url("fonts/Inter-ExtraBold.woff2") format("woff2");
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+  }
+
+/* ===== Reset ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== Theme ===== */
+:root {
+  /* Bayshore Standard Colors (do not remove) */
+  --bs-navy: #011B2E;
+  --bs-navy-alt: #002358;
+  --bs-blue: #005FDE;
+  --bs-red: #AA001D;
+
+  /* Legacy semantic mapping (kept for backward compatibility) */
+  --brand: var(--bs-navy);
+  --brand-dark: var(--bs-navy-alt);
+  --danger: var(--bs-red);
+  --success: #2E8B57;
+
+  --bg: #F7F9FC;
+  --surface: #ffffff;
+
+  --text: #333;
+  --muted: #5a6775;
+
+  --border: #d6d6d6;
+  --border-strong: #bbb;
+
+  --header-accent: #DCE6F1;
+
+  --radius: 6px;
+  --radius-sm: 4px;
+
+  --shadow: 0 2px 5px rgba(0,0,0,0.10);
+}
+
+/* ===== Base ===== */
+html,
+body {
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+/* ===== Layout ===== */
+.container {
+  max-width: 900px;
+  margin: 20px auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+form { margin-top: 20px; }
+
+label {
+  display: block;
+  margin: 8px 0 3px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ===== Header ===== */
+.top-bar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  background: var(--brand);
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+}
+
+.header-title {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Gold Template: right spacer matches logo block so title is truly centered */
+.header-right-spacer,
+.header-spacer {            /* alias kept for backward compatibility */
+  width: 48px;              /* matches .header-left .logo max-height feel */
+  height: 1px;              /* keeps the grid cell “real” without visual impact */
+}
+
+/* Logo defaults (general) */
+.logo {
+  max-width: 200px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Header logo overrides (kept for backward compatibility) */
+.header-left .logo {
+  max-height: 48px;
+  width: auto;
+  object-fit: contain;
+  margin: 0;
+}
+
+/* Back-compat: legacy logo-container behaves like Gold header-left */
+.logo-container { display: flex; align-items: center; }
+.logo-container .logo { max-height: 48px; width: auto; object-fit: contain; margin: 0; }
+
+.company-subtype-row{
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+/* ===== Inputs ===== */
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  margin-bottom: 10px;
+  background: #fff;
+  color: var(--text);
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--brand);
+  outline: none;
+}
+
+/* Readonly */
+input[readonly] {
+  background: #f3f5f8;
+  color: var(--text);
+}
+
+/* ===== Tables ===== */
+table.input-data {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+table.input-data thead th {
+  background: var(--header-accent);
+  color: var(--brand);
+  text-align: center;
+  font-weight: 700;
+  padding: 12px;
+  border: 1px solid var(--border-strong);
+}
+
+table.input-data th,
+table.input-data td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+  vertical-align: middle;
+  font-size: 0.95rem;
+}
+
+/* Tooltip anchor (no JS inline styles) */
+th { position: relative; }
+.tip-anchor { position: relative; }
+
+/* ===== Buttons ===== */
+.button-group {
+  text-align: center;
+  margin: 20px 0;
+}
+
+button,
+.dynamic-button {
+  display: inline-block;
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  margin: 5px;
+  transition: background-color 0.2s ease;
+}
+
+button:hover,
+.dynamic-button:hover {
+  background: var(--brand-dark);
+}
+
+.btn-primary{
+  background: var(--bs-navy);
+  color: #fff;
+  border: 1px solid var(--bs-navy);
+}
+.btn-primary:active{ transform: translateY(1px); }
+
+.btn-print{
+  background: transparent;
+  color: var(--bs-navy);
+  border: 1px solid var(--bs-navy);
+}
+.btn-print:active{ transform: translateY(1px); }
+
+/* Optional legacy variants (kept) */
+.non-assisted { background: var(--danger) !important; }
+.assisted { background: var(--success) !important; }
+
+/* ===== Segmented Toggle (kept) ===== */
+.seg-toggle {
+  display: inline-flex;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.12);
+  background: rgba(0,0,0,0.04);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+
+.seg-toggle input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.seg-toggle label {
+  padding: 10px 16px;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 700;
+  line-height: 1;
+  font-size: 0.95rem;
+  color: var(--brand);
+  background: transparent;
+  transition: background-color 0.2s ease, transform 0.06s ease;
+  min-width: 70px;
+  text-align: center;
+}
+
+/* Divider between segments (because of input/label structure) */
+.seg-toggle label + input + label {
+  border-left: 1px solid rgba(0,0,0,0.12);
+}
+
+/* If someone tabs, show focus */
+.seg-toggle input:focus + label {
+  outline: 2px solid rgba(0, 51, 102, 0.4);
+  outline-offset: -2px;
+}
+
+/* Checked state baseline */
+.seg-toggle input:checked + label {
+  transform: translateY(-1px);
+}
+
+/* YES checked => green */
+#csulYes:checked + label {
+  background: var(--success) !important;
+  color: #fff !important;
+}
+
+/* NO checked => red */
+#csulNo:checked + label {
+  background: var(--danger) !important;
+  color: #fff !important;
+}
+
+/* Unchecked => grey */
+#csulYes:not(:checked) + label,
+#csulNo:not(:checked) + label {
+  background: rgba(0,0,0,0.06);
+  color: var(--brand);
+}
+
+/* Bayshore Standard: JS toggles classes (no inline styles) */
+.seg-toggle label.seg-inactive{
+  background: rgba(0,0,0,0.06);
+  color: var(--brand);
+}
+.seg-toggle label.seg-active-yes{
+  background: var(--success);
+  color: #fff;
+}
+.seg-toggle label.seg-active-no{
+  background: var(--danger);
+  color: #fff;
+}
+
+/* ===== Utility ===== */
+.hidden,
+body:not(.is-printing) .is-hidden { display: none; }
+
+.currency,
+.money {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== Commission Display ===== */
+.commission-display {
+  background: var(--brand);
+  color: #fff;
+  padding: 15px;
+  text-align: center;
+  font-weight: 700;
+  margin-top: 20px;
+  font-size: 1.2rem;
+  border-radius: var(--radius-sm);
+}
+
+/* ===== QA Back Bar (kept) ===== */
+.qa-backbar {
+  margin: 8px 0 10px;
+  text-align: left;
+}
+
+/* ===== Job Status block (kept) ===== */
+.job-status{
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  background: #fff;
+}
+.job-status.is-bust{
+  border-color: #AB011E;
+}
+.job-status-title{
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.job-status-detail{
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+/* =========================================================
+   Bayshore Standard Additions (Shared) — backward compatible
+   ========================================================= */
+
+/* Inline validation hint */
+.field-hint {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--bs-red);
+
+  /* hidden by default; JS toggles .is-visible */
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+.field-hint.is-visible {
+  opacity: 1;
+  height: auto;
+}
+
+.has-error {
+  border-color: var(--bs-red) !important;
+  outline: 2px solid #AA001D;
+}
+
+/* Tooltip button + bubble (tap friendly) */
+.tip-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-left: 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.18);
+  background: #fff;
+  color: var(--brand);
+  font-weight: 900;
+  cursor: pointer;
+  padding: 0;
+}
+.tip-btn:active { transform: scale(0.98); }
+
+.tip-bubble {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  max-width: 260px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.15);
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+/* Bayshore Standard: selected answer highlight */
+.qa-btn,
+.dynamic-button.qa-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.qa-btn.is-selected{
+  background: var(--bs-blue) !important;
+  color: #fff !important;
+}
+
+/* Bayshore Standard: tooltip modal (kept for other calculators) */
+.bs-tip-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 9998;
+}
+.bs-tip-modal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 9999;
+}
+.bs-tip-card {
+  width: min(520px, calc(100vw - 32px));
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.25);
+}
+.bs-tip-title { font-weight: 800; margin-bottom: 8px; color: #011B2E; }
+.bs-tip-text { line-height: 1.35; margin-bottom: 14px; }
+.bs-tip-actions { display: flex; justify-content: flex-end; gap: 10px; }
+
+/* TH layout helper (kept) */
+.th-with-tip{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* =========================================================
+   Bayshore: Same-tab print safety (SCREEN gate) — Gold Template
+   Works with #printSheet INSIDE <main class="container">
+   ========================================================= */
+body:not(.is-printing):not(.print-page) #printSheet { display: none !important; }
+body.is-printing #printSheet,
+body.print-page #printSheet { display: block !important; }
+
+/* While printing, hide everything inside main EXCEPT #printSheet */
+body.is-printing main > :not(#printSheet) { display: none !important; }
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .container {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  table.input-data th,
+  table.input-data td {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+
+  .seg-toggle label {
+    padding: 10px 12px;
+  }
+}
+.oe-breakdown { margin-top: 6px; font-size: 0.95em; }
+.oe-line { display: flex; justify-content: space-between; gap: 12px; }
+
+/* ===== Bayshore Tooltips (Gold Template, no inline JS styles) ===== */
+.tip-wrap {
+  position: relative;
+  display: inline-block;
+  margin-left: 8px;
+}
+
+body.bs-modal-open,
+body.is-tip-open { overflow: hidden; }
+
+body.is-printing .print-force-hide { display: none !important; }
+body.is-printing .print-force-show { display: block !important; }
+
+/* =========================================================
+   Bayshore Print Page UX (shared, backward-compatible)
+   ========================================================= */
+.print-page-toolbar {
+  margin: 0 0 20px 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #f8fbff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.print-page-toolbar__top {
+  margin-bottom: 12px;
+}
+
+.print-page-toolbar__title {
+  margin: 0 0 4px 0;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--bs-navy);
+  line-height: 1.2;
+}
+
+.print-page-toolbar__subtitle {
+  margin: 0;
+  font-size: 0.98rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.print-page-toolbar__actions {
+  margin: 14px 0 10px 0;
+}
+
+.print-page-toolbar__actions .btn-primary,
+.print-page-toolbar__actions .btn-print,
+#printNowButton,
+#backToCalculatorButton {
+  min-width: 220px;
+}
+
+.print-page-note {
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #d8e5f5;
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 768px) {
+  .print-page-toolbar {
+    padding: 14px;
+    border-radius: 10px;
+  }
+
+  .print-page-toolbar__title {
+    font-size: 1.15rem;
+  }
+
+  .print-page-toolbar__actions .btn-primary,
+  .print-page-toolbar__actions .btn-print,
+  #printNowButton,
+  #backToCalculatorButton {
+    width: 100%;
+    min-width: 0;
+    margin: 6px 0;
+  }
+}
+
+.question-cards {
+  display: grid;
+  gap: 14px;
+  margin: 20px 0;
+}
+
+.question-card {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fbfcfe;
+}
+
+.question-card label {
+  margin: 0 0 10px 0;
+  font-weight: 700;
+}
+
+.action-bar--main {
+  position: sticky;
+  bottom: 0;
+  z-index: 12;
+  padding: 12px;
+  background: rgba(255,255,255,0.96);
+  border-top: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+}
+
+.action-bar__btn {
+  min-height: 52px;
+}
+
+.action-bar__btn--primary {
+  background: var(--bs-blue);
+}
+
+.print-page-status {
+  margin: 0 0 14px 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #eef5ff;
+  border: 1px solid #cfe0fb;
+  color: var(--bs-navy);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.print-empty-state {
+  padding: 24px 18px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.print-empty-state h2 {
+  margin: 0 0 8px 0;
+  font-size: 1.15rem;
+  color: var(--bs-navy);
+}
+
+.print-empty-state p {
+  margin: 0;
+  color: var(--muted);
+}
+
+button.is-busy,
+.dynamic-button.is-busy {
+  opacity: 0.72;
+  cursor: wait;
+}
+
+@media (max-width: 768px) {
+  .input-data--primary,
+  .input-data--labor,
+  .input-data--primary tbody,
+  .input-data--labor tbody,
+  .input-data--primary tr,
+  .input-data--labor tr,
+  .input-data--primary th,
+  .input-data--labor th,
+  .input-data--primary td,
+  .input-data--labor td {
+    display: block;
+    width: 100%;
+  }
+
+  .input-data--primary tr,
+  .input-data--labor tr {
+    margin-bottom: 14px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: #fff;
+  }
+
+  .input-data--primary th,
+  .input-data--labor th {
+    border: 0;
+    padding: 0 0 6px 0;
+    font-weight: 700;
+    background: transparent;
+  }
+
+  .input-data--primary td,
+  .input-data--labor td {
+    border: 0;
+    padding: 0 0 10px 0;
+  }
+
+  .input-data--primary td:last-child,
+  .input-data--labor td:last-child {
+    padding-bottom: 0;
+  }
+
+  .question-card .qa-btn,
+  .question-card .dynamic-button,
+  .action-bar__btn {
+    width: 100%;
+    margin: 6px 0;
+  }
+
+  .commission-display {
+    font-size: 1.05rem;
+    line-height: 1.4;
+  }
+}

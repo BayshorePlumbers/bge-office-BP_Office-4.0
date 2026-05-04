@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Bayshore CSP (self-only) -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self';
+                img-src 'self' data:;
+                style-src 'self';
+                script-src 'self';
+                connect-src 'self'" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <title>Bayshore Plumber Hourly Technician Sales Payroll Calculator</title>
+  <link rel="stylesheet" href="payrollstyle.css" type="text/css">
+  <link rel="stylesheet" href="payrollprint.css" type="text/css" media="print">
+</head>
+
+<body>
+  <main class="container" role="main">
+
+    <header class="top-bar no-print">
+      <div class="header-left">
+        <img src="BP.png" alt="Bayshore Plumbers Logo" class="logo">
+      </div>
+      <div class="header-title">SALES POTENTIAL COMMISSION CALCULATOR</div>
+      <div class="header-right-spacer"></div>
+    </header>
+
+    <section class="calculator">
+      <form id="unifiedForm" autocomplete="off" novalidate>
+
+        <!-- Modern segmented toggle (replaces Yes/No buttons) -->
+        <div class="row centered no-print company-subtype-row" id="companySubTypeRow">
+          <strong>Is this a S/W/G/CS job?</strong>
+
+          <!-- Accessible segmented control -->
+          <div class="seg-toggle" role="group" aria-label="S/W/G/CS job toggle">
+            <input type="radio" name="csulJob" id="csulYes" value="yes" />
+            <label for="csulYes">Yes</label>
+
+            <input type="radio" name="csulJob" id="csulNo" value="no" checked />
+            <label for="csulNo">No</label>
+          </div>
+
+          <!-- keeps compatibility for print/JS later -->
+          <input type="hidden" id="csulValue" value="no">
+        </div>
+
+        <!-- Header inputs -->
+        <table class="input-data">
+          <tbody>
+            <tr>
+              <th>Sales Rep Name:</th>
+              <td>
+                <input
+                    type="text"
+                    id="tn" class="bs-titlecase"
+                    value=""
+                    list="techList"
+                    autocomplete="off"
+                    >
+                    <datalist id="techList">
+                        <option value="Alberto Lopez"></option>
+                        <option value="Jose Rodriguez"></option>
+                        <option value="Juan Hernandez"></option>
+                        <option value="Kevin Perez"></option>
+                        <option value="Ryan Felt"></option>
+                    </datalist>
+              </td>
+
+              <th>Total Price:</th>
+              <td>
+                <input
+                  type="text"
+                  id="tp"
+                  class="currency bs-money"
+                  inputmode="decimal"
+                  placeholder="$0.00"
+                  autocomplete="off"
+                >
+              </td>
+            </tr>
+
+            <tr>
+              <th>Job Address:</th>
+              <td class="address-cell">
+                <div class="address-wrap">
+                  <input
+                    type="text"
+                    id="ja" class="bs-titlecase"
+                    placeholder="Enter job address..."
+                    autocomplete="off"
+                  >
+                </div>
+              </td>
+
+              <th>Date:</th>
+              <td>
+                <input
+                  type="text"
+                  id="date"
+                  class="date-input bs-date"
+                  inputmode="numeric"
+                  placeholder="Enter date (any format)"
+                  autocomplete="off"
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Company inputs -->
+        <table class="input-data" id="companyInputs">
+          <thead>
+            <tr><th colspan="4">Estimated Project Details</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+                <th>
+                    Estimated Project Duration (hours):
+                    <button type="button" class="tip-btn" data-tip="pd" aria-label="Project Duration info">i</button>
+                </th>
+              <td><input type="text" id="pd" class="bs-hours bs-pd" inputmode="decimal"></td>
+
+              <th>Estimated Material Expenses:</th>
+              <td>
+                <input
+                  type="text"
+                  id="material"
+                  class="currency bs-money"
+                  inputmode="decimal"
+                  placeholder="$0.00"
+                  autocomplete="off"
+                >
+              </td>
+            </tr>
+            <tr>
+              <th>Estimated Other Expenses:</th>
+              <td>
+                <input
+                  type="text"
+                  id="oe"
+                  class="currency bs-money"
+                  inputmode="decimal"
+                  placeholder="$0.00"
+                  autocomplete="off"
+                >
+              </td>
+
+              <th>Potential Start Date:</th>
+                <td>
+                <input
+                  type="text"
+                  id="potentialStart"
+                  class="date-input bs-date"
+                  inputmode="numeric"
+                  placeholder="Enter date (any format)"
+                  autocomplete="off"
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Labor -->
+        <table class="input-data input-data--labor" id="laborTable">
+            <thead>
+                <tr>
+                    <th colspan="4" id="laborHeader">
+                    Estimated ManHours
+                    <button type="button" class="tip-btn" data-tip="labor" aria-label="Labor Details info">i</button>
+                </th>
+            </tr>
+            </thead>
+          <tbody>
+            <tr>
+              <th>Day 1:</th><td><input type="text" id="day1" class="bs-hours" inputmode="decimal"></td>
+              <th>Day 2:</th><td><input type="text" id="day2" class="bs-hours" inputmode="decimal"></td>
+            </tr>
+            <tr>
+              <th>Day 3:</th><td><input type="text" id="day3" class="bs-hours" inputmode="decimal"></td>
+              <th>Day 4:</th><td><input type="text" id="day4" class="bs-hours" inputmode="decimal"></td>
+            </tr>
+            <tr>
+              <th>Day 5:</th><td><input type="text" id="day5" class="bs-hours" inputmode="decimal"></td>
+              <th>Additional Hours:</th><td><input type="text" id="ah" class="bs-hours" inputmode="decimal"></td>
+            </tr>
+            <tr>
+              <th>Total Overtime Hours:</th><td><input type="text" id="toh" class="bs-hours" inputmode="decimal"></td>
+              <th>Total Hours:</th><td><input type="text" id="totalHours" class="bs-hours" inputmode="decimal" readonly></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- For office use -->
+        <table class="input-data input-data--primary">
+          <thead><tr><th colspan="4">For Office Use Only</th></tr></thead>
+          <tbody>
+            <tr>
+              <th>SW21/RP21:</th><td><input type="text" id="sw" readonly></td>
+              <th>WH32:</th><td><input type="text" id="wh" readonly></td>
+            </tr>
+            <tr>
+              <th>RD15/UL15:</th><td><input type="text" id="rd" readonly></td>
+              <th>BPP%:</th><td><input type="text" id="bpp" readonly></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Outputs -->
+        <div class="output-group">
+          <div class="commission-display">
+            <p id="estVsTotalLabel">
+              <strong>Sales Commission:</strong>
+              <span id="totalCommission" class="money">$0.00</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="button-group action-bar action-bar--main no-print">
+            <button type="button" id="calculateBtn" class="action-bar__btn" aria-label="Calculate">Calculate</button>
+            <button type="button" id="printButton" class="action-bar__btn action-bar__btn--primary" aria-label="Print">Print</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="printSheet" class="is-hidden" aria-hidden="true"></section>
+  </main>
+
+    <!-- Bayshore Standard: tap-friendly tooltip modal (no inline positioning) -->
+  <div id="tipModal" class="tip-modal is-hidden" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="tip-modal__backdrop" data-tip-close></div>
+
+    <div class="tip-modal__panel" role="document">
+      <div class="tip-modal__header">
+        <div class="tip-modal__title" id="tipModalTitle">Info</div>
+        <button type="button" class="tip-modal__close btn-secondary" data-tip-close aria-label="Close">Close</button>
+      </div>
+
+      <div class="tip-modal__body" id="tipModalBody"></div>
+    </div>
+  </div>
+
+  <script src="payrollHOURLYSAMA.js"></script>
+
+</body>
+</html>

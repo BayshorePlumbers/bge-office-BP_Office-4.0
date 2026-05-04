@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self';
+                 img-src 'self' data: https:;
+                 style-src 'self';
+                 script-src 'self';
+                 connect-src 'self' https:;
+                 base-uri 'self';
+                 form-action 'self';" />
+
+  <title>Street Project Bidding Calculator - Bayshore Plumbers</title>
+  <meta name="theme-color" content="#011B2E" />
+
+  <!-- SAM 3.0 shared styles (screen + print) -->
+  <link rel="stylesheet" href="../assets/css/bp-core.css" type="text/css" />
+  <link rel="stylesheet" href="../assets/css/bp-calculator.css" type="text/css" />
+
+  <link rel="stylesheet" href="../assets/css/bp-print.css" media="print" />
+  <link rel="stylesheet" href="../assets/css/bp-calculator-print.css" media="print" />
+
+  <!-- Shared UI helpers (safe; no inline styles) -->
+  <script src="../assets/js/bp-ui.js" defer></script>
+
+  <!-- Calculator logic -->
+  <script src="street.js" defer></script>
+</head>
+
+<body class="bp-ready">
+  <header>
+    <div class="logo-container">
+      <img src="../assets/img/BP.png" alt="Bayshore Plumbers Logo" class="logo" />
+    </div>
+    <h1>Street Project Bidding Calculator</h1>
+    <hr class="header-separator" />
+  </header>
+
+  <main class="container">
+    <form id="biddingForm">
+      <!-- Section 1: Basic Options -->
+      <section class="form-section">
+        <div class="form-group">
+          <label for="method">Replacement/Installation Method:</label>
+          <select id="method" name="method">
+            <option value="Open Trench">Open Trench</option>
+            <option value="Trenchless">Trenchless</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="bm">Backfill Material:</label>
+          <select id="bm" name="bm">
+            <option value="Slurry">Slurry</option>
+            <option value="Base Rock">Base Rock</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="el">Encroachment Length:</label>
+          <select id="el" name="el">
+            <option value="10">Up to 10'</option>
+            <option value="20">Up to 20'</option>
+            <option value="25">Up to 25'</option>
+            <option value="30">Up to 30'</option>
+            <option value="35">Up to 35'</option>
+            <option value="40">Up to 40'</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="discount">Discounts:</label>
+          <select id="discount" name="discount">
+            <option value="No Discount">None</option>
+            <option value="5%">5 Percent</option>
+            <option value="10%">10 Percent</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Section 2: Time & Labor -->
+      <section class="form-section">
+        <div class="form-group">
+          <label for="ed">Estimated Days (ED):</label>
+          <input type="number" id="ed" name="ed" min="0" step="0.1" placeholder="Enter Estimated Days" />
+        </div>
+
+        <div class="form-group">
+          <label for="am">Additional Manpower:</label>
+          <input type="number" id="am" name="am" min="0" placeholder="Enter Additional Manpower" />
+        </div>
+
+        <div class="form-group">
+          <label for="amDays">Additional Manpower Days:</label>
+          <input type="number" id="amDays" name="amDays" min="0" placeholder="Enter days required for additional manpower" />
+        </div>
+
+        <div class="form-group">
+          <label for="tcGuys">Traffic Control Guys:</label>
+          <input type="number" id="tcGuys" name="tcGuys" min="0" placeholder="Enter number of traffic control personnel" />
+        </div>
+
+        <div class="form-group">
+          <label for="tcDays">Traffic Control Days:</label>
+          <input type="number" id="tcDays" name="tcDays" min="0" placeholder="Enter days required for traffic control" />
+        </div>
+
+        <div class="form-group">
+          <label for="depth">Depth:</label>
+          <input type="number" id="depth" name="depth" min="0" placeholder="Enter Estimated Depth" />
+        </div>
+
+        <div class="form-group">
+          <label for="others">Other Expenses:</label>
+          <input type="number" id="others" name="others" min="0" placeholder="Enter Estimated Expenses (Other)" />
+        </div>
+      </section>
+
+      <!-- Section 3: Additional Options -->
+      <section class="form-section">
+        <div class="form-group checkbox-group">
+          <label for="swr">Sidewalk Repair Required:</label>
+          <input type="checkbox" id="swr" name="swr" />
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label for="atr">Asphalt T-Cut Required:</label>
+          <input type="checkbox" id="atr" name="atr" />
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label for="ct">Compaction Test Required:</label>
+          <input type="checkbox" id="ct" name="ct" />
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label for="scr">Seal Coat Required:</label>
+          <input type="checkbox" id="scr" name="scr" />
+        </div>
+      </section>
+
+      <!-- Section 4: Upper Lateral & Financing -->
+      <section class="form-section">
+        <div class="form-group checkbox-group">
+          <label for="checkbox5">Is Upper Lateral Included?:</label>
+          <input type="checkbox" id="checkbox5" name="checkbox5" />
+        </div>
+
+        <div class="form-group">
+          <label for="upperMethod">Upper Replacement/Installation Method:</label>
+          <select id="upperMethod" name="upperMethod">
+            <option value="Open Trench">Open Trench</option>
+            <option value="Trenchless">Trenchless</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="landscape">Landscape:</label>
+          <select id="landscape" name="landscape">
+            <option value="Dirt">Dirt</option>
+            <option value="Pavers">Pavers</option>
+            <option value="Asphalt">Asphalt</option>
+            <option value="Concrete">Concrete</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="ull">Upper Lateral Length (feet):</label>
+          <input type="number" id="ull" name="ull" min="0" placeholder="Enter Upper Lateral Length" />
+        </div>
+
+        <div class="form-group">
+          <label for="ubm">Upper Backfill Material:</label>
+          <select id="ubm" name="ubm">
+            <option value="Native Soil">Native Soil</option>
+            <option value="Base Rock">Base Rock</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="financing">Financing Option:</label>
+          <select id="financing" name="financing">
+            <option value="None">None</option>
+            <option value="Plan 2832">Plan 2832</option>
+            <option value="Plan 2611">Plan 2611</option>
+            <option value="Plan 9998">Plan 9998</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Section 5: After Hours -->
+      <section class="form-section">
+        <div class="form-group checkbox-group">
+          <label for="afterHours">After Hours:</label>
+          <input type="checkbox" id="afterHours" name="afterHours" />
+        </div>
+      </section>
+
+      <!-- Section 6: Output (MATCH upper.html exactly) -->
+      <section class="form-section output-section">
+        <div class="output-group">
+          <label for="finalPrice">Final Bidding Price:</label>
+          <span id="finalPrice">$0.00</span>
+        </div>
+
+        <div id="breakdown" class="breakdown"></div>
+      </section>
+
+      <!-- Section 7: Buttons (MATCH upper.html exactly) -->
+      <section class="form-section buttons-section">
+        <button type="button" id="calculateBtn">Calculate</button>
+        <button type="button" id="printBtn">Print</button>
+      </section>
+
+      <!-- Hidden compatibility targets for street.js (kept to avoid JS errors) -->
+      <div hidden>
+        <span id="techCommission">$0.00</span>
+        <span id="bppDisplay">0.00%</span>
+      </div>
+    </form>
+  </main>
+</body>
+</html>

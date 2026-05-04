@@ -1,0 +1,431 @@
+/* =========================================================
+   payrollprint.css — Bayshore Standard (PRINT)
+   Rewritten/optimized WITHOUT deleting rules
+   Adds a SAFE isolation gate for #printSheet when body.is-printing
+   ========================================================= */
+
+   /* ===== Bayshore Standard Fonts (self-hosted) ===== */
+  @font-face{
+    font-family: "Inter";
+    src: url("fonts/Inter-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face{
+    font-family: "Inter";
+    src: url("fonts/Inter-SemiBold.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face{
+    font-family: "Inter";
+    src: url("fonts/Inter-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face{
+    font-family: "Inter";
+    src: url("fonts/Inter-ExtraBold.woff2") format("woff2");
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+  }
+
+@page {
+  /* IMPORTANT for iPad Safari:
+     Do NOT force A4 here, because changing paper size/scaling can blank the preview.
+     Let the print dialog decide the paper size. */
+  size: auto;
+  margin: 12.7mm; /* half-inch */
+}
+
+@media print {
+  /* Keep colors */
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    background: #fff !important;
+  }
+
+    /* SAFETY: Never allow printSheet to print unless we intentionally entered print mode.
+     Prevents "half printSheet + half webpage" output when iOS re-renders preview. */
+    body:not(.is-printing):not(.print-page) #printSheet {
+    display: none !important;
+  }
+
+  /* -------------------------------------------------------
+     SAFETY ISOLATION (ADDED, backward-compatible)
+     Ensures ONLY #printSheet prints while body.is-printing.
+     Prevents "print looks the same" issues across browsers.
+     ------------------------------------------------------- */
+  /* IMPORTANT:
+     Hide the app UI ONLY while we intentionally print */
+  body.is-printing .calculator,
+  body.is-printing form,
+  body.is-printing .button-group {
+    display: none !important;
+  }
+
+  /* Hide the screen header (top-bar) while printing,
+     so the printed sheet header is the only header */
+  body.is-printing .top-bar {
+  display: none !important;
+}
+
+    /* Utility to avoid splitting critical blocks
+     IMPORTANT: scope it to printRoot only, otherwise it creates huge blank gaps */
+  body.is-printing #printRoot .no-break {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+
+  /* Protect ONLY small/critical parts (header + commission box). */
+  body.is-printing #printRoot .print-header,
+  body.is-printing #printRoot .commission-details-section {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Never force whole tables to stay on one page (causes whitespace). */
+  body.is-printing #printRoot table {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+}
+
+/* =======================
+   Print Root + Scaling (class-only)
+   Used by com.js applyPrintScale()
+   ======================= */
+@media print {
+  #printRoot {
+    transform-origin: top left;
+  }
+
+  body.print-scale-100 #printRoot { transform: scale(1); }
+  body.print-scale-97  #printRoot { transform: scale(0.97); }
+  body.print-scale-95  #printRoot { transform: scale(0.95); }
+  body.print-scale-93  #printRoot { transform: scale(0.93); }
+  body.print-scale-90  #printRoot { transform: scale(0.90); }
+  body.print-scale-88  #printRoot { transform: scale(0.88); }
+  body.print-scale-85  #printRoot { transform: scale(0.85); }
+}
+
+/* =======================
+   Print Header (.top-bar in print HTML)
+   ======================= */
+@media print {
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-bottom: 2px solid #000;
+    padding: 0 0 4mm 0;
+    margin: 0 0 4mm 0;
+    background: #fff !important;
+    color: #000 !important;
+    border-radius: 0 !important;
+  }
+
+  .top-bar .logo {
+    max-height: 26px !important;
+    max-width: 26px !important;
+    width: 26px !important;
+    height: 26px !important;
+    object-fit: contain;
+    margin: 0 !important;
+  }
+
+  .header-title {
+    font-size: 14pt !important;
+    font-weight: 800 !important;
+    margin: 0 !important;
+    line-height: 1.1 !important;
+    text-align: center !important;
+  }
+}
+
+/* =======================
+   Print Tables (general)
+   ======================= */
+@media print {
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 3mm 0; /* tighter */
+  }
+
+  th,
+  td {
+    border: 1px solid #000;
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: top;
+    font-size: 12pt !important; /* MIN 12pt */
+  }
+
+  thead th {
+    background: #f0f0f0;
+    text-align: center;
+    font-weight: 800;
+  }
+
+  /* Helper blocks (kept for other calculators) */
+  .info-table th {
+    width: 45mm;
+    background: #f9f9f9;
+  }
+
+  .totals-table {
+    border: 2px solid #000;
+  }
+  .totals-table th {
+    width: 70%;
+    background: #eaeaea;
+    text-align: left;
+  }
+  .totals-table td {
+    font-weight: 800;
+    text-align: right;
+  }
+
+  .totals-table thead th {
+    text-align: center !important;
+  }
+}
+
+/* =======================
+   Optional Alternate Header (.print-header)
+   Kept (not deleted)
+   ======================= */
+@media print {
+  /* --- Bayshore Print Header (Gold Standard) --- */
+  .print-header{
+    --bs-print-logo-size: 44px;
+    --bs-print-title-size: 15pt;
+  }
+
+  .print-header{
+    display: grid;
+    grid-template-columns: var(--bs-print-logo-size) minmax(0, 1fr);
+    align-items: center;
+    column-gap: 10px;
+    row-gap: 0;
+    margin: 0 0 6mm 0;
+    padding: 0 0 3mm 0;
+    border-bottom: 2px solid #000;
+  }
+
+  .print-header .logo{
+    width: var(--bs-print-logo-size) !important;
+    height: var(--bs-print-logo-size) !important;
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: contain !important;
+    display: block !important;
+  }
+
+  .print-header h2{
+    min-width: 0 !important;
+    word-break: break-word !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: var(--bs-print-title-size) !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.3px !important;
+    text-transform: uppercase;
+    line-height: 1.1 !important;
+    white-space: normal !important;   /* allow wrap instead of overlap */
+    overflow: visible !important;
+  }
+}
+
+@media print {
+  #printRoot h3 {
+    margin: 0 0 2mm 0 !important;
+    padding: 0 !important;
+    font-size: 13pt !important;
+    font-weight: 800 !important;
+    page-break-after: avoid;
+  }
+
+  #printRoot table {
+    margin: 0 0 3mm 0 !important;
+  }
+}
+
+@media print {
+  /* Tighten the tables used in print HTML */
+  #printRoot table.input-data th,
+  #printRoot table.input-data td {
+    padding: 6px 8px !important;
+    font-size: 12pt !important; /* minimum 12pt */
+    line-height: 1.2 !important;
+  }
+
+  /* Notes row */
+  #printRoot .details-section table.input-data td {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* Prevent headings/sections from splitting */
+  /* Avoid ugly splits, but DO NOT force huge whitespace */
+  #printRoot h3 {
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  /* Protect only the truly critical small blocks */
+  #printRoot .print-header,
+  #printRoot .commission-details-section {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Let tables break if needed (prevents giant gaps + orphan pages) */
+  #printRoot table {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+}
+
+/* =========================================================
+   FINAL AUTHORITY (Gold Template):
+   While body.is-printing, ONLY #printSheet prints.
+   SAFE when #printSheet is inside <main>.
+   NEVER hides main itself.
+   ========================================================= */
+@media print {
+  /* Never print unless JS explicitly entered print mode */
+  body:not(.is-printing):not(.print-page) #printSheet { display: none !important; }
+
+  /* Hide everything inside main EXCEPT printSheet (safe isolation) */
+  body.is-printing main > :not(#printSheet) { display: none !important; }
+
+  /* Also hide any screen-only header if it exists outside main */
+  body.is-printing header.top-bar { display: none !important; }
+
+  /* Ensure the print sheet has NO “container/card” feel */
+  body.is-printing #printSheet {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: #fff !important;
+  }
+
+  /* CRITICAL: main.container is the ancestor “card” from payrollstyle.css.
+     Neutralize it during print so the printout is not inside a bordered/shadowed container. */
+  body.is-printing main.container {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  body.is-printing #printRoot,
+  body.is-printing #printSheet .print-body {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  /* Kill any “card/container” look inside the printed HTML */
+  body.is-printing #printSheet .container,
+  body.is-printing #printSheet main.container {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+}
+
+/* --- Bayshore Gold Template compatibility: print wrappers --- */
+@media print {
+  .print-body{
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 !important;
+    padding: 0 !important; /* no “card” feeling */
+  }
+}
+body.is-printing .print-force-hide { display: none !important; }
+body.is-printing .print-force-show { display: block !important; }
+
+@media print {
+  .print-page-toolbar,
+  .print-page-note,
+  .no-print,
+  .print-page-toolbar__actions,
+  .print-page-toolbar__top {
+    display: none !important;
+  }
+}
+@media print {
+  /* Calculator page: Share → Print should print the generated print sheet, not the live UI */
+  body:not(.print-page) main > :not(#printSheet) {
+    display: none !important;
+  }
+
+  body:not(.print-page) #printSheet {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: #fff !important;
+  }
+
+  body:not(.print-page) main.container {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  body:not(.print-page) #printRoot,
+  body:not(.print-page) #printSheet .print-body,
+  body:not(.print-page) #printSheet .container,
+  body:not(.print-page) #printSheet main.container {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
+}
+
+.print-toolbar,
+.print-status {
+  display: none !important;
+}
+

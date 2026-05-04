@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SAM 3.0 CSP: no CDN, no unsafe-inline -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    base-uri 'self';
+    object-src 'none';
+    frame-ancestors 'self';
+    img-src 'self' data:;
+    style-src 'self';
+    script-src 'self';
+  " />
+
+  <title>BAYSHORE GENERAL ENGINEERING Inc. dba BAYSHORE PLUMBERS</title>
+
+  <!-- SAM 3.0 shared UI + launcher layout + print -->
+  <link rel="stylesheet" href="../assets/css/bp-core.css" type="text/css" />
+  <link rel="stylesheet" href="../assets/css/bp-launcher-2col.css" type="text/css" />
+  <link rel="stylesheet" href="../assets/css/bp-print.css" media="print" type="text/css" />
+</head>
+
+<body class="bp-ready">
+  <main class="bp-page">
+    <header class="bp-header">
+      <h1>HELLO</h1>
+      <h2>BAYSHORE DOCUMENTS</h2>
+
+      <!-- Use same logo container + class as other launcher pages -->
+      <div class="logo-container">
+        <img src="BP.png" alt="BP" class="logo" />
+      </div>
+
+      <p>Please select the DOCUMENTS that you would like to use today, from the options below:</p>
+    </header>
+
+    <!-- Same grid wrapper used by bidcalindex/prindex -->
+    <div class="file-container" aria-label="Bayshore Documents">
+      <a class="bp-card" href="BayshorePriceBook.pdf" data-id="doc-pricebook" data-cat="documents" data-keywords="price book pricebook bayshore">
+        <div class="bp-icon" aria-hidden="true">
+          <img
+            src="../Thumbnails/pbpic.jpg"
+            alt=""
+            class="bp-icon__img"
+            data-bp-fallback="../assets/img/thumbnails/BP.png"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+            width="60"
+            height="60"
+          />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Document</div>
+          <div class="bp-card__title">Bayshore Plumbers Price Book</div>
+          <div class="bp-card__meta">PDF</div>
+        </div>
+      </a>
+
+      <a class="bp-card" href="Home Inspection Checklist - Bayshore Plumbers v1.pdf" data-id="doc-checklist" data-cat="documents" data-keywords="home inspection checklist">
+        <div class="bp-icon" aria-hidden="true">
+          <img
+            src="../Thumbnails/bphic.jpg"
+            alt=""
+            class="bp-icon__img"
+            data-bp-fallback="../assets/img/thumbnails/BP.png"
+            loading="lazy"
+            decoding="async"
+            width="60"
+            height="60"
+          />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Document</div>
+          <div class="bp-card__title">Home Inspection Checklist</div>
+          <div class="bp-card__meta">PDF</div>
+        </div>
+      </a>
+
+      <a class="bp-card" href="Bayshore Plumbers Handbook.pdf" data-id="doc-handbook" data-cat="documents" data-keywords="handbook bayshore plumbers">
+        <div class="bp-icon" aria-hidden="true">
+          <img
+            src="../Thumbnails/bphand.jpg"
+            alt=""
+            class="bp-icon__img"
+            data-bp-fallback="../assets/img/thumbnails/BP.png"
+            loading="lazy"
+            decoding="async"
+            width="60"
+            height="60"
+          />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Document</div>
+          <div class="bp-card__title">Bayshore Plumbers Handbook</div>
+          <div class="bp-card__meta">PDF</div>
+        </div>
+      </a>
+
+      <a class="bp-card" href="PlumbingGuide.pdf" data-id="doc-plumbingguide" data-cat="documents" data-keywords="black decker plumbing guide">
+        <div class="bp-icon" aria-hidden="true">
+          <img
+            src="../Thumbnails/book.png"
+            alt=""
+            class="bp-icon__img"
+            data-bp-fallback="../assets/img/thumbnails/BP.png"
+            loading="lazy"
+            decoding="async"
+            width="60"
+            height="60"
+          />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Document</div>
+          <div class="bp-card__title">Black &amp; Decker Plumbing Guide</div>
+          <div class="bp-card__meta">PDF</div>
+        </div>
+      </a>
+
+      <a class="bp-card" href="BP Safety Standard.png" data-id="doc-safety" data-cat="documents" data-keywords="safety standard">
+        <div class="bp-icon" aria-hidden="true">
+          <img
+            src="BP.png"
+            alt=""
+            class="bp-icon__img"
+            data-bp-fallback="../assets/img/thumbnails/BP.png"
+            loading="lazy"
+            decoding="async"
+            width="60"
+            height="60"
+          />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Document</div>
+          <div class="bp-card__title">Bayshore Safety Standard</div>
+          <div class="bp-card__meta">PNG</div>
+        </div>
+      </a>
+
+      <a class="bp-card" href="County Sheet (Updated).pdf" data-id="doc-county-spec" data-cat="documents" data-keywords="county specifications sheet">
+        <div class="bp-icon" aria-hidden="true">
+          <img
+            src="BP.png"
+            alt=""
+            class="bp-icon__img"
+            data-bp-fallback="../assets/img/thumbnails/BP.png"
+            loading="lazy"
+            decoding="async"
+            width="60"
+            height="60"
+          />
+        </div>
+        <div class="bp-card__body">
+          <div class="bp-card__kicker">Document</div>
+          <div class="bp-card__title">County Specifications Sheet</div>
+          <div class="bp-card__meta">PDF</div>
+        </div>
+      </a>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+        style-src  'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+        img-src    'self' data:;
+        connect-src 'self' http://localhost:8080;
+      ">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <title>BAYSHORE PLUMBERS - PROJECT CART</title>
+  <link rel="stylesheet" href="matlook.css">
+  <script src="global.js"></script>
+</head>
+<body class="cart-page">
+  <header class="header-container">
+    <div class="navbar">
+      <div class="nav-logo border">
+        <div class="logo"></div>
+      </div>
+      <div class="nav-search">
+        <input placeholder="Search Items" class="search-input" id="search-input">
+        <div class="search-icon">
+          <i class="fa-solid fa-magnifying-glass" onclick="searchItems()"></i>
+        </div>
+      </div>
+      <div class="cart-icon" onclick="goToCartPage()">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-counter" id="cart-counter">0</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="input-fields">
+    <table>
+      <tr>
+        <td><label for="technician-name">TECHNICIAN'S NAME:</label></td>
+        <td><input type="text" id="technician-name" name="technician-name"></td>
+      </tr>
+      <tr>
+        <td><label for="date">DATE:</label></td>
+        <td><input type="date" id="date" name="date"></td>
+      </tr>
+      <tr>
+        <td><label for="job-address">JOB ADDRESS:</label></td>
+        <td><input type="text" id="job-address" name="job-address"></td>
+      </tr>
+      <tr>
+        <td><label for="notes">NOTES (if any):</label></td>
+        <td><textarea id="notes" name="notes" rows="4"></textarea></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="container cart-container">
+    <div class="cart-content">
+      <h2>MATERIALS</h2>
+      <div class="container materials-container" id="materials-container"></div>
+      <div class="category-total" id="materials-total">Total Materials price: $0.00</div>
+
+      <h2>EQUIPMENTS</h2>
+      <div class="container equipments-container" id="equipments-container"></div>
+      <div class="category-total" id="equipments-total">Total Equipments price: $0.00</div>
+
+      <h2>PERMITS</h2>
+      <div class="container permits-container" id="permits-container"></div>
+      <div class="category-total" id="permits-total">Total Permits price: $0.00</div>
+
+      <div class="total-price" id="overall-total-price">
+        Total price: $<span id="total-price">0.00</span>
+      </div>
+
+      <div class="button-container">
+        <button onclick="updateTotalprice()">Calculate: Total price</button>
+        <button onclick="clearCart()">Clear Cart</button>
+        <button onclick="finalizeAndPrint()">Print</button>
+        <button type="button" onclick="downloadPdf()">Download PDF</button>
+        <button type="button" onclick="sendPdfToManagers()">SEND</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function normalizeText(text) {
+      text = text.toLowerCase();
+      text = text.replace(/(\d+)\s*(?:-|and\s+)?1\/2(?:\s*(?:inches|inch|in))?/g, (match, p1) => (parseFloat(p1) + 0.5).toString());
+      text = text.replace(/(\d+)\s*(?:-|and\s+)?a\s+half(?:\s*(?:inches|inch|in))?/g, (match, p1) => (parseFloat(p1) + 0.5).toString());
+      text = text.replace(/["']/g, "");
+      text = text.replace(/[^a-z0-9.\s]/g, " ");
+      text = text.replace(/\s+/g, " ");
+      return text.trim();
+    }
+
+    function generateUID(item, defaultCategory) {
+      const category = item.Category || defaultCategory;
+      const partNumber = item["Part Number"] || "";
+      return normalizeText(`${item["Ln#"]}-${partNumber}-${item.Description}-${category}`);
+    }
+
+    let cart = [];
+
+// On window load, load cart from storage and display cart items
+window.onload = function () {
+  loadCartFromStorage();
+  updateCartItemCount();
+  displayCartItems();
+  updateTotalprice();
+};
+
+// Add to Cart function (typically called from the product pages)
+function addToCart(item) {
+  const uid = generateUID(item, "material");
+  const isCountable = item.Unit && item.Unit.toUpperCase() === "EA";
+  const qtyToAdd = isCountable ? item.quantity : 1;
+  const existingIndex = cart.findIndex(cartItem => cartItem.uid === uid);
+  if (existingIndex !== -1) {
+    cart[existingIndex].quantity += qtyToAdd;
+  } else {
+    cart.push({ ...item, uid, quantity: qtyToAdd });
+  }
+  saveCartToStorage();
+  updateCartItemCount();
+}
+
+// Clear Cart function
+function clearCart() {
+  cart = [];
+  saveCartToStorage();
+  updateCartItemCount();
+  displayCartItems();
+  updateTotalprice();
+}
+
+// Load cart from localStorage
+function loadCartFromStorage() {
+  const stored = localStorage.getItem('cart');
+  if (stored) {
+    cart = JSON.parse(stored);
+    updateCartItemCount();
+  }
+}
+
+// Save cart to localStorage
+function saveCartToStorage() {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+// Update the cart counter; for non-"EA" items count 1 per distinct item
+function updateCartItemCount() {
+  const total = cart.reduce((sum, item) => {
+    if (item.Unit && item.Unit.toUpperCase() !== "EA") {
+      return sum + 1;
+    } else {
+      return sum + item.quantity;
+    }
+  }, 0);
+  document.getElementById('cart-counter').textContent = total;
+}
+
+// Display cart items in their respective containers
+function displayCartItems() {
+  const matContainer = document.getElementById('materials-container');
+  const equipContainer = document.getElementById('equipments-container');
+  const permContainer = document.getElementById('permits-container');
+  matContainer.innerHTML = '';
+  equipContainer.innerHTML = '';
+  permContainer.innerHTML = '';
+
+  if (cart.length === 0) {
+    matContainer.innerHTML = '<p>Your cart is empty.</p>';
+    equipContainer.innerHTML = '<p>Your cart is empty.</p>';
+    permContainer.innerHTML = '<p>Your cart is empty.</p>';
+    return;
+  }
+
+  const materials = cart.filter(item => isMaterial(item));
+  const equipments = cart.filter(item => isEquipment(item));
+  const permits = cart.filter(item => isPermit(item));
+
+  if (materials.length > 0) {
+    materials.forEach(item => {
+      const div = document.createElement('div');
+      div.classList.add('material', 'item-container');
+      div.innerHTML = getItemDetails(item);
+      matContainer.appendChild(div);
+    });
+  } else {
+    matContainer.innerHTML = '<p>No materials in the cart.</p>';
+  }
+
+  if (equipments.length > 0) {
+    equipments.forEach(item => {
+      const div = document.createElement('div');
+      div.classList.add('equipment', 'item-container');
+      div.innerHTML = getItemDetails(item);
+      equipContainer.appendChild(div);
+    });
+  } else {
+    equipContainer.innerHTML = '<p>No equipments in the cart.</p>';
+  }
+
+  if (permits.length > 0) {
+    permits.forEach(item => {
+      const div = document.createElement('div');
+      div.classList.add('permit', 'item-container');
+      div.innerHTML = getItemDetails(item);
+      permContainer.appendChild(div);
+    });
+  } else {
+    permContainer.innerHTML = '<p>No permits in the cart.</p>';
+  }
+}
+
+// Build HTML for a cart item
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[m]));}
+
+function getItemDetails(cartItem) {
+  const qty = cartItem.quantity;
+  const isEquip = isEquipment(cartItem);
+  const priceLabel = isEquip ? (cartItem.rentalType === 'perDay' ? 'Price per Day' : 'Price per Hour') : 'Price';
+  const price = (Number(cartItem.price) || 0) * qty;
+
+  return `
+    <div class="item-body">
+      <h3 class="item-title">${escapeHtml(cartItem.Description)}</h3>
+      <div class="item-meta">
+        <div class="quantity-control" role="group" aria-label="Quantity controls">
+          <button class="qty-btn" onclick="updatequantity('${cartItem.uid}', ${qty - 1})" aria-label="Decrease quantity">−</button>
+          <span class="qty-value">${qty}</span>
+          <button class="qty-btn" onclick="updatequantity('${cartItem.uid}', ${qty + 1})" aria-label="Increase quantity">+</button>
+        </div>
+        <div class="item-price"><span>${priceLabel}:</span> <strong>$${price.toFixed(2)}</strong></div>
+      </div>
+      <div class="item-actions">
+        <button class="remove-button" onclick="removeFromCart('${cartItem.uid}')">Remove</button>
+      </div>
+    </div>
+  `;
+}
+
+// Update quantity for an item in the cart
+function updatequantity(uid, newqty) {
+  if (newqty > 0) {
+    const index = cart.findIndex(item => item.uid === uid);
+    if (index !== -1) {
+      cart[index].quantity = newqty;
+      displayCartItems();
+      updateCartItemCount();
+      saveCartToStorage();
+      updateTotalprice();
+    }
+  } else {
+    removeFromCart(uid);
+  }
+}
+
+// Remove an item from the cart
+function removeFromCart(uid) {
+  cart = cart.filter(item => item.uid !== uid);
+  displayCartItems();
+  updateCartItemCount();
+  saveCartToStorage();
+  updateTotalprice();
+}
+
+function calculateTotalpriceForCategory(items) {
+  return items.reduce((total, item) => {
+    const qty = Number(item.quantity) || 0;
+    const price = Number(item.price) || 0;
+    return total + (price * qty);
+  }, 0);
+}
+
+// Update overall total price and category totals in the cart page
+function updateTotalprice() {
+  const matTotal = calculateTotalpriceForCategory(cart.filter(item => isMaterial(item)));
+  const equipTotal = calculateTotalpriceForCategory(cart.filter(item => isEquipment(item)));
+  const permTotal = calculateTotalpriceForCategory(cart.filter(item => isPermit(item)));
+  document.getElementById('materials-total').textContent = `Total Materials price: $${matTotal.toFixed(2)}`;
+  document.getElementById('equipments-total').textContent = `Total Equipments price: $${equipTotal.toFixed(2)}`;
+  document.getElementById('permits-total').textContent = `Total Permits price: $${permTotal.toFixed(2)}`;
+  document.getElementById('total-price').textContent = (matTotal + equipTotal + permTotal).toFixed(2);
+}
+
+// Calculate grand total (if needed)
+function calculateGrandTotal(cart) {
+  const matTotal = calculateTotalpriceForCategory(cart.filter(item => isMaterial(item)));
+  const equipTotal = calculateTotalpriceForCategory(cart.filter(item => isEquipment(item)));
+  const permTotal = calculateTotalpriceForCategory(cart.filter(item => isPermit(item)));
+  return matTotal + equipTotal + permTotal;
+}
+
+// Generate HTML for printing the cart items in a table format
+function generateCartItemsHTML(cart) {
+  let html = '';
+  const categories = [
+    { items: cart.filter(item => isMaterial(item)), label: 'MATERIALS' },
+    { items: cart.filter(item => isEquipment(item)), label: 'EQUIPMENTS' },
+    { items: cart.filter(item => isPermit(item)), label: 'PERMITS' }
+  ];
+  categories.forEach(cat => {
+    if (cat.items.length > 0) {
+      html += `<tr class="category-heading"><td colspan="4">${cat.label}</td></tr>`;
+      cat.items.forEach((item, i) => {
+        html += `<tr>
+                    <td>${i + 1}</td>
+                    <td>${item.Description}</td>
+                    <td>${item.quantity}</td>
+                    <td>$${(item.price * item.quantity).toFixed(2)}</td>
+                 </tr>`;
+      });
+    }
+  });
+  return html;
+}
+
+// Function to print the cart with details
+function finalizeAndPrint() {
+  const technicianName = document.getElementById('technician-name').value.trim() || "N/A";
+  const date = document.getElementById('date').value || "N/A";
+  const jobAddress = document.getElementById('job-address').value.trim() || "N/A";
+  const notes = document.getElementById('notes').value.trim() || "N/A";
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <title>Print Bill</title>
+      <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1, h2, h3 { text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { padding: 8px; text-align: left; border: 1px solid #ddd; }
+        .category-heading { background-color: #f2f2f2; font-weight: bold; }
+      </style>
+    </head>
+    <body>
+      <div id="print-area">
+        <h1>BAYSHORE PLUMBERS - PROJECT CART</h1>
+        <h3>Input Fields</h3>
+        <table>
+          <tr><th>TECHNICIAN'S NAME:</th><td>${technicianName}</td></tr>
+          <tr><th>DATE:</th><td>${date}</td></tr>
+          <tr><th>JOB ADDRESS:</th><td>${jobAddress}</td></tr>
+          <tr><th>NOTES:</th><td>${notes}</td></tr>
+        </table>
+        <h3>Cart Items</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>S.No.</th>
+              <th>Description</th>
+              <th>Quantity</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${generateCartItemsHTML(cart)}
+          </tbody>
+        </table>
+        <h3>Total Price</h3>
+        <p>Total Materials price: $<span>${calculateTotalpriceForCategory(cart.filter(item => isMaterial(item))).toFixed(2)}</span></p>
+        <p>Total Equipments price: $<span>${calculateTotalpriceForCategory(cart.filter(item => isEquipment(item))).toFixed(2)}</span></p>
+        <p>Total Permits price: $<span>${calculateTotalpriceForCategory(cart.filter(item => isPermit(item))).toFixed(2)}</span></p>
+        <p><strong>Total Price: $<span>${calculateGrandTotal(cart).toFixed(2)}</span></strong></p>
+      </div>
+      </body>
+    </html>
+  `);
+  printWindow.document.close();
+  printWindow.print();
+}
+
+// Determine types using attributes set by the source pages
+function isEquipment(item) {
+  // Equipment items come with a rentalType ('perDay' or 'perHour')
+  return typeof item.rentalType === 'string' && item.rentalType.length > 0;
+}
+function isPermit(item) {
+  // Permits have Unit 'Permit' or explicit type flag
+  return (item.Unit && String(item.Unit).toLowerCase() === 'permit') || item.type === 'permit';
+}
+function isMaterial(item) {
+  // Everything else is a material
+  return !isEquipment(item) && !isPermit(item);
+}
+
+// Redirect to cart page (if needed)
+function goToCartPage() {
+  window.location.href = 'cart.html';
+}
+
+// Optional search function for the cart page
+function searchItems() {
+  // Implement if needed.
+}
+
+// Debounce function
+function debounce(func, delay) {
+  let timeout;
+  return function(...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), delay);
+  };
+}
+</script>
+<script src="lib/html2pdf.bundle.min.js"></script>
+<script src="config.recipients.js"></script>
+<script src="send-pdf.js"></script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!-- htechSAMA.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+    <!-- Bayshore CSP (self-only) -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self';
+                 img-src 'self' data:;
+                 style-src 'self';
+                 script-src 'self';
+                 connect-src 'self'" />
+  <!-- Shared on-screen and print styles -->
+  <link href="payrollstyle.css" rel="stylesheet" type="text/css" />
+  <link href="payrollprint.css" media="print" rel="stylesheet" type="text/css" />
+
+  <!-- Favicon -->
+  <link href="favicon.ico" rel="icon" type="image/x-icon" />
+
+  <title>Technician Potential Kicker Calculator - Bayshore Plumbers</title>
+</head>
+<body>
+  <!-- Main Container -->
+  <main class="container" role="main">
+    <header class="top-bar no-print">
+      <div class="header-left">
+        <img class="logo" src="BP.png" alt="Bayshore Plumbers Logo">
+      </div>
+      <div class="header-title">Technician Potential Kicker Calculator</div>
+      <div class="header-right-spacer"></div>
+    </header>
+    <section class="calculator">
+      <form id="htechForm">
+
+        <!-- Job Details -->
+        <table class="input-data">
+          <tbody>
+
+            <!-- Job Type Selector (with conditional blocks like OPS) -->
+            <tr>
+              <th>Job Type:</th>
+              <td colspan="3">
+                <div class="form-group form-group-jobtype">
+                  <label class="subheading" for="jobType">Job Type</label>
+                  <select id="jobType" name="jobType" autocomplete="off">
+                    <option selected value="company">Company Job</option>
+                    <option value="office">Office (Ali / Karen)</option>
+                    <option value="technician">Solis</option>
+                    <option value="newtech">David/ Jose Sanabria/ Rafael</option>
+                    <option value="hourlytech">Hourly Technician</option>
+                  </select>
+
+                  <!-- GNI (Company only) -->
+                  <div id="gniContainer" class="is-hidden gni-container">
+                    <label class="checkbox-row">
+                      <input id="gni" type="checkbox" autocomplete="off" />
+                      <span>Is this a GNI job?</span>
+                    </label>
+                  </div>
+
+                  <!-- S/W/G/CS (Technician + Sales only) -->
+                  <div id="swgcsContainer" class="is-hidden swgcs-container">
+                    <label class="swgcs-label">Is this a S/W/G/CS job?</label>
+                    <div class="button-group button-group-left">
+                      <button class="dynamic-button qa-btn" id="swgcsYes" type="button" aria-pressed="false">YES</button>
+                      <button class="dynamic-button qa-btn" id="swgcsNo" type="button" aria-pressed="true">NO</button>
+                    </div>
+                    <input id="swgcs" name="swgcs" type="hidden" value="no" />
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Technician selector (required for kicker) -->
+            <tr>
+              <th>Technician:</th>
+              <td colspan="3">
+                <div class="form-group">
+                  <label class="subheading" for="technicianSelect">Technician (required for kicker)</label>
+                  <select id="technicianSelect" name="technicianSelect" autocomplete="off">
+                    <option value="" selected>Select Technician</option>
+                  </select>
+                  <div class="field-hint" data-for="technicianSelect"></div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>Job Address:</th>
+              <td>
+                <input id="ja" name="ja" placeholder="Enter job address here" type="text" autocomplete="off" />
+              </td>
+
+              <th>Total Price:</th>
+              <td>
+                <input id="tp" name="tp" placeholder="Enter final selling price" type="text" inputmode="decimal" autocomplete="off" />
+              </td>
+            </tr>
+
+            <tr>
+              <th>Date:</th>
+              <td>
+                <input id="date" name="date" type="text" placeholder="MM/DD/YYYY" inputmode="numeric" autocomplete="off" />
+              </td>
+
+              <th class="th-with-tip">
+                Project Duration (hours):
+                <button type="button" class="tip-btn" data-tip="pd" aria-label="Project Duration help">i</button>
+              </th>
+              <td>
+                <input id="pd" name="pd" placeholder="Enter project duration" type="text" inputmode="decimal" autocomplete="off" />
+              </td>
+            </tr>
+
+            <tr>
+              <th>Material Expenses:</th>
+              <td>
+                <input id="material" name="material" placeholder="Enter material expenses" type="text" inputmode="decimal" autocomplete="off" />
+              </td>
+
+              <th>Other Expenses:</th>
+              <td>
+                <input id="oe" name="oe" placeholder="Enter other expenses" type="text" inputmode="decimal" autocomplete="off" />
+              </td>
+            </tr>
+            <tr>
+              <th>Credit Card Fee (3%):</th>
+              <td>
+                <input id="ccFeeDisplay" name="ccFeeDisplay" type="text" readonly autocomplete="off" />
+              </td>
+
+              <th>Other Expenses (Total):</th>
+              <td>
+                <input id="oeTotalDisplay" name="oeTotalDisplay" type="text" readonly autocomplete="off" />
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+
+        <!-- Labor Details (Hours) -->
+        <table class="input-data input-data--labor">
+          <thead>
+            <tr><th colspan="4">Labor Details</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Day 1 (Hours):</th>
+              <td><input id="day1" name="day1" type="text" inputmode="decimal" autocomplete="off" /></td>
+              <th>Day 2 (Hours):</th>
+              <td><input id="day2" name="day2" type="text" inputmode="decimal" autocomplete="off" /></td>
+            </tr>
+
+            <tr>
+              <th>Day 3 (Hours):</th>
+              <td><input id="day3" name="day3" type="text" inputmode="decimal" autocomplete="off" /></td>
+              <th>Day 4 (Hours):</th>
+              <td><input id="day4" name="day4" type="text" inputmode="decimal" autocomplete="off" /></td>
+            </tr>
+
+            <tr>
+              <th>Day 5 (Hours):</th>
+              <td><input id="day5" name="day5" type="text" inputmode="decimal" autocomplete="off" /></td>
+              <th>Additional Hours:</th>
+              <td><input id="ah" name="ah" type="text" inputmode="decimal" autocomplete="off" /></td>
+            </tr>
+
+            <tr>
+              <th>Overtime Hours:</th>
+              <td><input id="toh" name="toh" type="text" inputmode="decimal" autocomplete="off" /></td>
+              <th class="th-with-tip">
+                Total Hours:
+                <button type="button" class="tip-btn" data-tip="labor" aria-label="Labor hours help">i</button>
+              </th>
+              <td><input id="totalHours" name="totalHours" readonly type="text" autocomplete="off" /></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Payment (OPS layout) -->
+        <table class="input-data">
+          <tbody>
+            <tr><th colspan="4">Payment</th></tr>
+
+            <tr>
+              <th>Payment Received?</th>
+              <td colspan="3">
+                <div id="paymentReceivedContainer" class="payment-received-container">
+                  <div class="button-group button-group-left">
+                    <button class="dynamic-button qa-btn" id="payRecYes" type="button" aria-pressed="false">YES</button>
+                    <button class="dynamic-button qa-btn" id="payRecNo" type="button" aria-pressed="true">NO</button>
+                  </div>
+                  <input id="paymentReceived" name="paymentReceived" type="hidden" value="no" />
+                </div>
+              </td>
+            </tr>
+
+            <tr id="paymentMethodRow" class="is-hidden">
+              <th>Payment Method</th>
+              <td colspan="3">
+                <div id="paymentMethodContainer">
+                  <div class="button-group button-group-left">
+                    <button class="dynamic-button qa-btn" id="payMethodCash" type="button" aria-pressed="false">CASH</button>
+                    <button class="dynamic-button qa-btn" id="payMethodCheck" type="button" aria-pressed="false">CHECK</button>
+                    <button class="dynamic-button qa-btn" id="payMethodCard" type="button" aria-pressed="false">CARD</button>
+                    <button class="dynamic-button qa-btn" id="payMethodAccounts" type="button" aria-pressed="false">ACCOUNTS</button>
+                  </div>
+                  <input id="paymentMethod" name="paymentMethod" type="hidden" value="" />
+                </div>
+              </td>
+            </tr>
+
+            <tr id="cashAmountRow" class="is-hidden">
+              <th>Cash Amount</th>
+              <td colspan="3">
+                <input id="cashAmount" name="cashAmount" placeholder="Enter cash amount received" type="text" inputmode="decimal" autocomplete="off" />
+              </td>
+            </tr>
+
+            <tr id="checkNumberRow" class="is-hidden">
+              <th>Check Number</th>
+              <td colspan="3">
+                <input id="checkNumber" name="checkNumber" placeholder="Enter check number" type="text" autocomplete="off" />
+              </td>
+            </tr>
+
+            <tr id="cardFeeRow" class="is-hidden">
+              <th>Card Fee Added?</th>
+              <td colspan="3">
+                <div id="cardFeeContainer">
+                  <div class="button-group button-group-left">
+                    <button class="dynamic-button qa-btn" id="cardFeeYes" type="button" aria-pressed="false">YES</button>
+                    <button class="dynamic-button qa-btn" id="cardFeeNo" type="button" aria-pressed="true">NO</button>
+                  </div>
+                  <input id="cardFeeAdded" name="cardFeeAdded" type="hidden" value="no" />
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- For Office Use Only -->
+        <table class="input-data input-data--primary">
+          <thead>
+            <tr><th colspan="4">For Office Use Only</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>SW21/RP21:</th>
+              <td><input id="sw" name="sw" readonly type="text" autocomplete="off" /></td>
+              <th>WH32:</th>
+              <td><input id="wh" name="wh" readonly type="text" autocomplete="off" /></td>
+            </tr>
+            <tr>
+              <th>RD15/UL15:</th>
+              <td><input id="rd" name="rd" readonly type="text" autocomplete="off" /></td>
+              <th>BPP%:</th>
+              <td><input id="bpp" name="bpp" readonly type="text" autocomplete="off" /></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Output Group -->
+        <div class="output-group">
+          <div class="commission-display">Kicker: <span id="kicker">0.00</span></div>
+
+          <div class="job-status is-hidden" id="jobStatus">
+            <div class="job-status-title" id="jobStatusTitle"></div>
+            <div class="job-status-detail" id="jobStatusDetail"></div>
+          </div>
+
+          <!-- Hidden internal values (for print) -->
+          <input id="enteredTotalPrice" name="enteredTotalPrice" type="hidden" value="" />
+          <input id="updatedTotalPrice" name="updatedTotalPrice" type="hidden" value="" />
+          <input id="commissionAmount" name="commissionAmount" type="hidden" value="" />
+          <input id="totalCommission" name="totalCommission" type="hidden" value="" />
+          <input id="profitBeforeKicker" name="profitBeforeKicker" type="hidden" value="" />
+          <input id="profitAfterKicker" name="profitAfterKicker" type="hidden" value="" />
+        </div>
+
+        <!-- Buttons -->
+        <div class="button-group action-bar action-bar--main no-print">
+          <button id="calculateBtn" type="button" class="action-bar__btn" aria-label="Calculate Kicker">Calculate</button>
+          <button id="printButton" type="button" class="action-bar__btn action-bar__btn--primary" aria-label="Print Document">Print</button>
+        </div>
+
+      </form>
+    </section>
+    <!-- PRINT SHEET: do not remove (required for Bayshore print system) -->
+    <section id="printSheet" class="is-hidden" aria-hidden="true"></section>
+  </main>
+  
+  <!-- Scripts -->
+  <script src="htechSAMA.js"></script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+        style-src  'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+        img-src    'self' data:;
+        connect-src 'self' http://localhost:8080;
+      ">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+  <title>BAYSHORE PLUMBERS - PERMITS LIST</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="matlook.css">
+  <script src="global.js"></script>
+</head>
+<body>
+  <header class="header-container">
+    <div class="navbar">
+      <div class="nav-logo border cart-logo">
+        <div class="logo"></div>
+      </div>
+      <div class="nav-search">
+        <select class="search-select" id="category-select">
+          <option value="ALL">ALL</option>
+          <!-- Additional categories if needed -->
+        </select>
+        <input placeholder="Search Bayshore Plumbers Permits List" class="search-input" id="search-input">
+        <div class="search-icon">
+          <i class="fa-solid fa-magnifying-glass" onclick="searchPermits()"></i>
+        </div>
+      </div>
+      <div class="cart-icon" onclick="goToCart()">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cart-counter" class="cart-counter">0</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Top Pagination -->
+  <div class="pagination pagination-container" id="top-pagination-container"></div>
+
+  <!-- Permit container -->
+  <div class="container" id="permits-container"></div>
+  
+  <!-- Bottom Pagination -->
+  <div class="pagination pagination-container" id="bottom-pagination-container"></div>
+  
+  <script>
+    function normalizeText(text) {
+      text = text.toLowerCase();
+      text = text.replace(/(\d+)\s*(?:-|and\s+)?1\/2(?:\s*(?:inches|inch|in))?/g, (match, p1) => (parseFloat(p1) + 0.5).toString());
+      text = text.replace(/(\d+)\s*(?:-|and\s+)?a\s+half(?:\s*(?:inches|inch|in))?/g, (match, p1) => (parseFloat(p1) + 0.5).toString());
+      text = text.replace(/["']/g, "");
+      text = text.replace(/[^a-z0-9.\s]/g, " ");
+      text = text.replace(/\s+/g, " ");
+      return text.trim();
+    }
+
+    function generateUID(item) {
+      return normalizeText(`${item["Ln#"]}-${item["Part Number"] || ''}-${item.Description}-permit`);
+    }
+
+    // Build permits from global.js
+    const permitsData = (globalData?.permits || []).map((p, idx) => ({
+      "Ln#": p["Ln#"] ?? (idx + 1),
+      "Part Number": p["Part Number"] ?? p.id ?? "",
+      "Description": p.Description ?? p.description ?? "",
+      "price": Number(p.price ?? 0),
+      "quantity": Number(p.quantity ?? 1),
+      "Unit": p.Unit ?? p.unit ?? "Permit",
+      "ImageURL": p.ImageURL ?? p.image_file ?? ""
+    }));
+
+    const permitsPerPage = 25;
+    let currentPage = 1;
+    let cart = [];
+
+    window.onload = function () {
+      loadCartFromStorage();
+      updateCartItemCount();
+      displayPermits(currentPage);
+      document.getElementById('search-input').addEventListener('input', debounce(searchPermits, 300));
+    };
+
+    function displayPermits(page, permits = permitsData) {
+      const container = document.getElementById('permits-container');
+      const start = (page - 1) * permitsPerPage;
+      const end = Math.min(start + permitsPerPage, permits.length);
+      const items = permits.slice(start, end);
+      container.innerHTML = '';
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.classList.add('permit');
+        const img = document.createElement('img');
+        img.src = item.ImageURL;
+        img.alt = item.Description;
+        img.loading = "lazy";
+        img.decoding = "async";
+        img.fetchPriority = "low";
+        img.width = 480;
+        img.height = 270;
+        div.appendChild(img);
+        const details = document.createElement('div');
+        details.classList.add('details');
+        details.innerHTML = `
+          <p><strong>Description: ${item.Description}</strong></p>
+          <p>Price: $${item.price.toFixed(2)}</p>
+          <p>Quantity: ${item.quantity} ${item.Unit}</p>
+        `;
+        div.appendChild(details);
+        const btn = document.createElement('button');
+        btn.classList.add('add-to-cart');
+        btn.textContent = 'Add to Cart';
+        btn.addEventListener('click', () => addToCart(item));
+        div.appendChild(btn);
+        container.appendChild(div);
+      });
+      displayPagination(permits.length);
+    }
+
+    function displayPagination(total) {
+      const totalPages = Math.ceil(total / permitsPerPage);
+      const containers = document.querySelectorAll('.pagination-container');
+      containers.forEach(container => {
+        container.innerHTML = '';
+        const prev = document.createElement('button');
+        prev.textContent = 'Previous';
+        prev.disabled = currentPage === 1;
+        prev.addEventListener('click', () => { if (currentPage > 1) { currentPage--; displayPermits(currentPage); } });
+        container.appendChild(prev);
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement('button');
+          btn.textContent = i;
+          btn.classList.add('pagination-button');
+          if (i === currentPage) btn.classList.add('active');
+          btn.addEventListener('click', () => { currentPage = i; displayPermits(currentPage); });
+          container.appendChild(btn);
+        }
+        const next = document.createElement('button');
+        next.textContent = 'Next';
+        next.disabled = currentPage === totalPages;
+        next.addEventListener('click', () => { if (currentPage < totalPages) { currentPage++; displayPermits(currentPage); } });
+        container.appendChild(next);
+      });
+    }
+
+    function searchPermits() {
+      const rawQ = document.getElementById('search-input').value || '';
+      const q = normalizeText(rawQ);
+      const tokens = q.split(/\s+/).filter(Boolean);
+
+      const filtered = permitsData.filter(item => {
+        const hay = normalizeText([
+          item.Description,
+          item['Part Number'],
+          item.Unit
+        ].filter(Boolean).join(' '));
+        return tokens.every(t => hay.includes(t));
+      });
+
+      currentPage = 1;
+      displayPermits(currentPage, filtered);
+    }
+
+    function addToCart(item) {
+      const uid = generateUID(item);
+      const existingIndex = cart.findIndex(cartItem => cartItem.uid === uid);
+      if (existingIndex !== -1) {
+        cart[existingIndex].quantity += item.quantity;
+      } else {
+        cart.push({ ...item, uid, quantity: item.quantity, type: 'permit' });
+      }
+      updateCartItemCount();
+      saveCartToStorage();
+      broadcastCartUpdate();
+    }
+
+    function loadCartFromStorage() {
+      const stored = localStorage.getItem('cart');
+      if (stored) { cart = JSON.parse(stored); updateCartItemCount(); }
+    }
+
+    function saveCartToStorage() {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function updateCartItemCount() {
+      const total = cart.reduce((sum, item) => {
+        if (item.Unit && item.Unit.toUpperCase() !== "EA") {
+          return sum + 1;
+        } else {
+          return sum + item.quantity;
+        }
+      }, 0);
+      document.getElementById('cart-counter').textContent = total;
+    }
+
+    function broadcastCartUpdate() {
+      window.dispatchEvent(new Event('storage'));
+    }
+
+    function debounce(func, delay) {
+      let timeout;
+      return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), delay);
+      };
+    }
+
+    function goToCart() {
+      window.location.href = "cart.html";
+    }
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js"></script>
+</body>
+</html>
