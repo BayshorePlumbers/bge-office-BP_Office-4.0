@@ -407,7 +407,7 @@
         const v = (els.tn && els.tn.value ? els.tn.value.trim() : "");
         if (isAllowedTechName(v)) return true;
 
-        alert('Sales Rep Name must be exactly "Alberto Lopez" or "Glenn Harper" or "Jose Rodriguez" or "Juan Hernandez" or "Kevin Perez" or "Ryan Felt".');
+        alert('Sales Rep Name must be exactly "Alberto Lopez" or "Glenn Harper" or "Jose Rodriguez" or "Kevin Perez" or "Ryan Felt".');
         if (els.tn) {
             els.tn.value = "";
             els.tn.focus();
@@ -416,7 +416,7 @@
     }
 
     // ---------- Allowed technicians (ONLY these two) ----------
-    const ALLOWED_TECHS = ["Alberto Lopez", "Glenn Harper", "Jose Rodriguez", "Juan Hernandez", "Kevin Perez", "Ryan Felt"];
+    const ALLOWED_TECHS = ["Alberto Lopez", "Glenn Harper", "Jose Rodriguez", "Kevin Perez", "Ryan Felt"];
 
     function isAllowedTechName(name) {
         return ALLOWED_TECHS.includes((name || "").trim());
