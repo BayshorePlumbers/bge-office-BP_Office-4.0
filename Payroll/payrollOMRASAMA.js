@@ -473,7 +473,7 @@
   // ============================================================
 
   // ---------- Allowed sales reps (ONLY these two) ----------
-  const ALLOWED_TECHS = ["David Jimenez", "Jose Sanabria", "Rafael Menendez"];
+  const ALLOWED_TECHS = ["Basilio Davalos", "Rafael Menendez"];
 
   function isAllowedTechName(name) {
     return ALLOWED_TECHS.includes((name || "").trim());
@@ -483,7 +483,7 @@
     const v = (els.tn && els.tn.value ? els.tn.value.trim() : "");
     if (isAllowedTechName(v)) return true;
 
-    alert('Sales Rep Name must be exactly "David Jimenez" or "Jose Sanabria" or "Rafael Menendez".');
+    alert('Sales Rep Name must be exactly "Basilio Davalos" or "Rafael Menendez".');
     if (els.tn) {
       els.tn.value = "";
       els.tn.focus();
