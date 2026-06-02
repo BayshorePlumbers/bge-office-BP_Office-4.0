@@ -17,7 +17,6 @@ const PRINT_BUTTON_LOCK_MS = 2500;
     "Alberto Lopez": 31,
     "Glenn Harper": 45,
     "Jose Rodriguez (Chepe)": 31,
-    "Juan Hernandez": 62,
     "Kevin Perez": 31,
     "Ryan Felt": 52,
     "Ryan/Aimel": 67,
